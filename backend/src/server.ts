@@ -1,13 +1,13 @@
 import app from './app';
 import { config } from './config';
-import { connectDatabase } from './config/database';
+// import { prisma } from './config/database';
 import { connectRedis } from './config/redis';
 
 // Only start the server if NOT running on Vercel and executed directly
 if (require.main === module && process.env.VERCEL !== '1') {
   (async () => {
     try {
-      await connectDatabase();
+      // Prisma connection is handled automatically by singleton
       await connectRedis();
       app.listen(config.port, () => {
         console.log(`\n🚀 Server running on port ${config.port}`);
