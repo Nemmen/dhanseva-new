@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: 'DhanSeva - Your Trusted Financial Partner | भरोसे का साथ, तुरंत लोन आपके पास',
   description: 'Complete Financial & Legal Solutions - Loan Services, CA Services, Legal Services, and more',
   keywords: 'loan services, legal services, financial services, CA services, business legal, personal legal',
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({

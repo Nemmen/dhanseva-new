@@ -31,7 +31,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-xl">DS</span>
+              <img src='/logo.png' className='h-auto w-48'></img>
             </div>
             <div className="hidden sm:block">
               <h1 className="text-xl font-bold text-gray-900">DhanSeva</h1>

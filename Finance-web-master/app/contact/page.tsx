@@ -208,10 +208,10 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-1">Call Us</h3>
                   <a
-                    href="tel:+911234567890"
+                    href="tel:+918510002953"
                     className="text-blue-600 hover:text-blue-700"
                   >
-                    +91 123-456-7890
+                    +91 8510002953
                   </a>
                   <p className="text-sm text-gray-600 mt-1">
                     Mon-Sat: 9 AM - 6 PM IST
