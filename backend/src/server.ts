@@ -3,13 +3,23 @@ import { config } from './config';
 import { connectDatabase } from './config/database';
 import { connectRedis } from './config/redis';
 
-const startServer = async () => {
+// Initialize connections
+const initializeServer = async () => {
   try {
     // Connect to Database
     await connectDatabase();
 
     // Connect to Redis
     await connectRedis();
+  } catch (error) {
+    console.error('❌ Failed to initialize server:', error);
+    throw error;
+  }
+};
+
+const startServer = async () => {
+  try {
+    await initializeServer();
 
     // Start Express Server
     app.listen(config.port, () => {
@@ -23,6 +33,15 @@ const startServer = async () => {
     process.exit(1);
   }
 };
+
+// Initialize for serverless
+initializeServer().then(() => {
+  // Export the app for Vercel serverless functions
+  export default app;
+}).catch((error) => {
+  console.error('Failed to initialize:', error);
+  process.exit(1);
+});
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err: Error) => {
@@ -47,4 +66,7 @@ process.on('SIGINT', () => {
   process.exit(0);
 });
 
-startServer();
+// Start server only when run directly (not in serverless)
+if (require.main === module) {
+  startServer();
+}
