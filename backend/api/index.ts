@@ -1,9 +1,3 @@
 import app from '../src/app';
-import { connectDatabase } from '../src/config/database';
-import { connectRedis } from '../src/config/redis';
-
-// Initialize connections for serverless
-connectDatabase().catch(console.error);
-connectRedis().catch(console.error);
-
+// Pure import, no connections, no side effects. Vercel will use this as handler.
 export default app;
