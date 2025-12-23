@@ -51,7 +51,7 @@ export const config = {
   },
 
   // CORS
-  corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  corsOrigin: process.env.CORS_ORIGIN || 'https://dhanseva-web.vercel.app',
 
   // Service Pricing
   pricing: {
