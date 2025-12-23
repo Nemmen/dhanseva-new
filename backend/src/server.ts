@@ -37,7 +37,7 @@ const startServer = async () => {
 // Initialize for serverless
 initializeServer().then(() => {
   // Export the app for Vercel serverless functions
-  export default app;
+  module.exports = app;
 }).catch((error) => {
   console.error('Failed to initialize:', error);
   process.exit(1);
@@ -66,7 +66,7 @@ process.on('SIGINT', () => {
   process.exit(0);
 });
 
-// Start server only in development (not in serverless environments like Vercel)
-if (process.env.NODE_ENV === 'development') {
+// Start server only when run directly (not in serverless)
+if (require.main === module) {
   startServer();
 }
