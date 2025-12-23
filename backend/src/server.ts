@@ -66,7 +66,7 @@ process.on('SIGINT', () => {
   process.exit(0);
 });
 
-// Start server only when run directly (not in serverless)
-if (require.main === module) {
+// Start server only in development (not in serverless environments like Vercel)
+if (process.env.NODE_ENV === 'development') {
   startServer();
 }
