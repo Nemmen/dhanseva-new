@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Verification - Dhanseva</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f5f5;
+        padding: 20px;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 30px;
+        text-align: center;
+        color: white;
+      }
+      .header h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+      .header p {
+        font-size: 14px;
+        opacity: 0.9;
+      }
+      .content {
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .content h2 {
+        color: #333;
+        font-size: 20px;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+      .content p {
+        color: #666;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 15px;
+      }
+      .otp-box {
+        background: #f8f9fa;
+        border: 2px solid #667eea;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 30px 0;
+        text-align: center;
+      }
+      .otp-code {
+        font-size: 36px;
+        font-weight: 700;
+        color: #667eea;
+        letter-spacing: 4px;
+        font-family: "Courier New", monospace;
+        word-break: break-all;
+      }
+      .expiry-notice {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 4px;
+        text-align: left;
+      }
+      .expiry-notice p {
+        color: #856404;
+        font-size: 13px;
+        margin: 0;
+      }
+      .warning-icon {
+        display: inline-block;
+        margin-right: 8px;
+        font-weight: bold;
+      }
+      .footer-section {
+        background: #f8f9fa;
+        padding: 20px 30px;
+        border-top: 1px solid #e9ecef;
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+      }
+      .security-note {
+        background: #e7f3ff;
+        border-left: 4px solid #2196f3;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 4px;
+        text-align: left;
+      }
+      .security-note p {
+        color: #0d47a1;
+        font-size: 12px;
+        margin: 0;
+        line-height: 1.6;
+      }
+      .social-links {
+        margin-top: 15px;
+      }
+      .social-links a {
+        display: inline-block;
+        margin: 0 8px;
+        color: #667eea;
+        text-decoration: none;
+        font-size: 12px;
+      }
+      .divider {
+        height: 1px;
+        background: #e9ecef;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>🔐 Email Verification</h1>
+        <p>Welcome to Dhanseva Legal Services</p>
+      </div>
+
+      <!-- Content -->
+      <div class="content">
+        <h2>Verify Your Email Address</h2>
+
+        <p>
+          Thank you for registering with Dhanseva. To complete your account
+          setup and access all features, please verify your email address using
+          the OTP below.
+        </p>
+
+        <!-- OTP Box -->
+        <div class="otp-box">
+          <p
+            style="margin: 0; color: #666; font-size: 12px; margin-bottom: 10px"
+          >
+            Your One-Time Password
+          </p>
+          <div class="otp-code">{{OTP}}</div>
+        </div>
+
+        <p style="margin-top: 20px">
+          This OTP is valid for <strong>5 minutes</strong> only.
+        </p>
+
+        <!-- Expiry Notice -->
+        <div class="expiry-notice">
+          <p>
+            <span class="warning-icon">⏱️</span>This code will expire at
+            {{EXPIRY_TIME}} IST
+          </p>
+        </div>
+
+        <!-- Security Note -->
+        <div class="security-note">
+          <p>
+            🔒 <strong>For Your Security:</strong> Never share this OTP with
+            anyone, including Dhanseva staff. We will never ask for this code
+            via email or phone.
+          </p>
+        </div>
+
+        <div class="divider"></div>
+
+        <p style="color: #999; font-size: 12px">
+          If you didn't request this verification, please ignore this email and
+          your account will not be activated.
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer-section">
+        <p>© 2025 Dhanseva Legal Services. All rights reserved.</p>
+        <p style="margin-top: 10px; color: #999">
+          Need help?
+          <a
+            href="mailto:support@dhanseva.com"
+            style="color: #667eea; text-decoration: none"
+            >Contact Support</a
+          >
+        </p>
+        <p style="margin-top: 5px; color: #999">
+          This is an automated email. Please do not reply to this address.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

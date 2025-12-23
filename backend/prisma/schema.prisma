@@ -1,0 +1,214 @@
+// This is your Prisma schema file
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum Role {
+  USER
+  DSA
+  EMPLOYEE
+}
+
+enum ServiceCategory {
+  PERSONAL_LEGAL
+  BUSINESS_LEGAL
+  FINANCIAL_LEGAL
+  GOVT_COMPLIANCE
+  SPECIALIZED_LEGAL
+}
+
+enum RequestStatus {
+  UNPAID
+  PAID
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+// Core Models
+model User {
+  id            String   @id @default(uuid())
+  role          Role
+  email         String   @unique
+  passwordHash  String
+  emailVerified Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  requests      ServiceRequest[] @relation("UserRequests")
+  dsaRequests   ServiceRequest[] @relation("DsaRequests")
+  payments      Payment[]
+  dsaProfile    DsaProfile?
+  employeeProfile EmployeeProfile?
+
+  @@index([email])
+  @@index([role])
+}
+
+model DsaProfile {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  registrationPaid Boolean  @default(false)
+  isActive        Boolean  @default(true)
+  
+  // Personal Details
+  fullName        String
+  phone           String
+  whatsapp        String?
+  address         String
+  state           String
+  city            String
+  pincode         String
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+  @@index([isActive])
+}
+
+model EmployeeProfile {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  fullName        String
+  department      String?
+  isActive        Boolean  @default(true)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Service {
+  id          String          @id @default(uuid())
+  name        String
+  category    ServiceCategory
+  description String?
+  price       Int             @default(99)
+  isActive    Boolean         @default(true)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  // Relations
+  requests    ServiceRequest[]
+
+  @@index([category])
+  @@index([isActive])
+}
+
+model ServiceRequest {
+  id              String        @id @default(uuid())
+  serviceId       String
+  service         Service       @relation(fields: [serviceId], references: [id])
+  
+  createdById     String
+  createdBy       User          @relation("UserRequests", fields: [createdById], references: [id])
+  
+  filledByDsaId   String?
+  filledByDsa     User?         @relation("DsaRequests", fields: [filledByDsaId], references: [id])
+  
+  status          RequestStatus @default(UNPAID)
+  formData        Json          // Stores BaseForm + Service-specific extensions
+  paid            Boolean       @default(false)
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  payments        Payment[]
+  auditLogs       AuditLog[]
+
+  @@index([serviceId])
+  @@index([createdById])
+  @@index([filledByDsaId])
+  @@index([status])
+  @@index([paid])
+  @@index([createdAt])
+}
+
+model Payment {
+  id              String        @id @default(uuid())
+  requestId       String
+  request         ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  
+  amount          Int           // Amount in paise (₹99 = 9900)
+  currency        String        @default("INR")
+  
+  razorpayOrderId   String?     @unique
+  razorpayPaymentId String?     @unique
+  razorpaySignature String?
+  
+  status          PaymentStatus @default(PENDING)
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([requestId])
+  @@index([userId])
+  @@index([status])
+  @@index([razorpayOrderId])
+  @@index([razorpayPaymentId])
+}
+
+model OTP {
+  id        String   @id @default(uuid())
+  email     String
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([expiresAt])
+}
+
+model DsaInvite {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  email     String?
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([expiresAt])
+  @@index([used])
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  requestId   String
+  request     ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  
+  action      String   // e.g., "STATUS_CHANGED", "DSA_ASSIGNED", "DATA_EDITED"
+  performedBy String   // User ID or role
+  oldValue    Json?
+  newValue    Json?
+  
+  createdAt   DateTime @default(now())
+
+  @@index([requestId])
+  @@index([createdAt])
+}

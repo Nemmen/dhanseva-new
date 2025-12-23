@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Request Completed - Dhanseva</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f5f5;
+        padding: 20px;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      .header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        padding: 30px;
+        text-align: center;
+        color: white;
+      }
+      .header h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+      .success-icon {
+        font-size: 48px;
+        margin-bottom: 15px;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .greeting {
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+      .content p {
+        color: #666;
+        font-size: 14px;
+        line-height: 1.8;
+        margin-bottom: 15px;
+      }
+      .completion-summary {
+        background: #d1e7dd;
+        border: 2px solid #0f5132;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .completion-summary h2 {
+        color: #0f5132;
+        font-size: 16px;
+        margin-bottom: 15px;
+        font-weight: 600;
+      }
+      .summary-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(15, 81, 50, 0.2);
+        font-size: 13px;
+        color: #0f5132;
+      }
+      .summary-item:last-child {
+        border-bottom: none;
+      }
+      .summary-label {
+        font-weight: 500;
+      }
+      .summary-value {
+        font-weight: 600;
+      }
+      .expert-info {
+        background: #f0f7ff;
+        border: 1px solid #d0e8ff;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .expert-info h3 {
+        color: #333;
+        font-size: 14px;
+        margin-bottom: 15px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+      }
+      .expert-info h3::before {
+        content: "👨‍⚖️";
+        margin-right: 10px;
+        font-size: 18px;
+      }
+      .expert-details {
+        font-size: 13px;
+        color: #666;
+        line-height: 1.8;
+      }
+      .document-section {
+        background: #f9f9f9;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .document-section h3 {
+        color: #333;
+        font-size: 14px;
+        margin-bottom: 15px;
+        font-weight: 600;
+      }
+      .document-info {
+        background: #e7f3ff;
+        border-left: 4px solid #2196f3;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+      }
+      .document-info p {
+        color: #0d47a1;
+        font-size: 13px;
+        margin: 0;
+        line-height: 1.6;
+      }
+      .download-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 13px;
+        transition: transform 0.2s;
+      }
+      .download-button:hover {
+        transform: translateY(-2px);
+      }
+      .next-steps {
+        background: #fff9e6;
+        border-left: 4px solid #ffc107;
+        padding: 20px;
+        margin: 25px 0;
+        border-radius: 4px;
+      }
+      .next-steps h3 {
+        color: #856404;
+        font-size: 14px;
+        margin-bottom: 12px;
+        font-weight: 600;
+      }
+      .next-steps-list {
+        list-style: none;
+        padding: 0;
+      }
+      .next-steps-list li {
+        color: #856404;
+        font-size: 13px;
+        margin-bottom: 8px;
+        padding-left: 20px;
+        position: relative;
+      }
+      .next-steps-list li:before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: #ffc107;
+        font-weight: bold;
+      }
+      .rating-section {
+        background: #f0f7ff;
+        border: 1px solid #d0e8ff;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+        text-align: center;
+      }
+      .rating-section h3 {
+        color: #333;
+        font-size: 14px;
+        margin-bottom: 15px;
+        font-weight: 600;
+      }
+      .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 30px;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 600;
+        margin-top: 15px;
+        font-size: 14px;
+        transition: transform 0.2s;
+      }
+      .cta-button:hover {
+        transform: translateY(-2px);
+      }
+      .footer-section {
+        background: #f8f9fa;
+        padding: 20px 30px;
+        border-top: 1px solid #e9ecef;
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+      }
+      .divider {
+        height: 1px;
+        background: #e9ecef;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <div class="success-icon">✅</div>
+        <h1>Your Request is Complete!</h1>
+        <p>{{SERVICE_NAME}} - Ready for Download</p>
+      </div>
+
+      <!-- Content -->
+      <div class="content">
+        <div class="greeting">Hi {{USER_NAME}},</div>
+
+        <p>
+          Great news! Your {{SERVICE_NAME}} has been successfully completed by
+          our legal expert. Your document is now ready for download and use.
+        </p>
+
+        <!-- Completion Summary -->
+        <div class="completion-summary">
+          <h2>✓ Request Summary</h2>
+          <div class="summary-item">
+            <span class="summary-label">Service</span>
+            <span class="summary-value">{{SERVICE_NAME}}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Status</span>
+            <span class="summary-value">COMPLETED</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Request ID</span>
+            <span class="summary-value">{{REQUEST_ID}}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Completed On</span>
+            <span class="summary-value">{{COMPLETION_DATE}}</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Total Time Taken</span>
+            <span class="summary-value">{{DURATION}}</span>
+          </div>
+        </div>
+
+        <!-- Expert Info -->
+        <div class="expert-info">
+          <h3>Prepared By</h3>
+          <div class="expert-details">
+            <strong>{{EXPERT_NAME}}</strong><br />
+            {{EXPERT_QUALIFICATION}}<br />
+            Experience: {{EXPERT_EXPERIENCE}} years<br /><br />
+            <a
+              href="mailto:{{EXPERT_EMAIL}}"
+              style="color: #667eea; text-decoration: none"
+              >Contact Expert</a
+            >
+          </div>
+        </div>
+
+        <!-- Document Section -->
+        <div class="document-section">
+          <h3>📄 Your Document is Ready</h3>
+
+          <div class="document-info">
+            <p>
+              Your {{SERVICE_NAME}} document has been carefully prepared and
+              reviewed. It is legally compliant and ready to use.
+            </p>
+          </div>
+
+          <div style="text-align: center; margin: 20px 0">
+            <a href="{{DOWNLOAD_LINK}}" class="download-button"
+              >⬇️ Download Document</a
+            >
+          </div>
+
+          <p
+            style="
+              color: #666;
+              font-size: 12px;
+              text-align: center;
+              margin-top: 10px;
+            "
+          >
+            The document has been sent to your registered email as well.
+          </p>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="next-steps">
+          <h3>📋 Next Steps</h3>
+          <ul class="next-steps-list">
+            <li>Download your document from the link above</li>
+            <li>Review the document carefully</li>
+            <li>Print and sign if required</li>
+            <li>Use it for your intended purpose</li>
+            <li>Keep a copy for your records</li>
+          </ul>
+        </div>
+
+        <!-- Divider -->
+        <div class="divider"></div>
+
+        <!-- Rating Section -->
+        <div class="rating-section">
+          <h3>⭐ How was your experience with Dhanseva?</h3>
+          <p style="color: #666; font-size: 13px; margin-bottom: 15px">
+            Help us improve by rating your experience
+          </p>
+          <a href="{{RATING_LINK}}" class="cta-button">Rate Your Experience</a>
+        </div>
+
+        <!-- Support -->
+        <p
+          style="
+            color: #666;
+            font-size: 13px;
+            line-height: 1.8;
+            margin-top: 20px;
+          "
+        >
+          <strong>Need help using your document?</strong> Our support team is
+          available 24/7. Contact us at
+          <a
+            href="mailto:support@dhanseva.com"
+            style="color: #667eea; text-decoration: none"
+            >support@dhanseva.com</a
+          >
+          or WhatsApp us.
+        </p>
+
+        <!-- Trust Badge -->
+        <p
+          style="
+            text-align: center;
+            color: #999;
+            font-size: 11px;
+            margin-top: 20px;
+          "
+        >
+          🔒 This document is legally valid and prepared by a qualified legal
+          professional.
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer-section">
+        <p>© 2025 Dhanseva Legal Services. All rights reserved.</p>
+        <p style="margin-top: 10px; color: #999">
+          Have more legal needs?
+          <a
+            href="{{BROWSE_SERVICES}}"
+            style="color: #667eea; text-decoration: none"
+            >Browse Other Services</a
+          >
+        </p>
+        <p style="margin-top: 5px; color: #999">
+          This is an automated email. Please do not reply to this address.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Request Status Update - Dhanseva</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f5f5;
+        padding: 20px;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 30px;
+        text-align: center;
+        color: white;
+      }
+      .header h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .greeting {
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+      .content p {
+        color: #666;
+        font-size: 14px;
+        line-height: 1.8;
+        margin-bottom: 15px;
+      }
+      .status-box {
+        background: #f0f7ff;
+        border: 2px solid #667eea;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+      }
+      .status-title {
+        font-size: 12px;
+        color: #999;
+        text-transform: uppercase;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      .status-badge {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 15px;
+      }
+      .status-assigned {
+        background: #d4edda;
+        color: #155724;
+      }
+      .status-inprogress {
+        background: #cfe2ff;
+        color: #084298;
+      }
+      .status-completed {
+        background: #d1e7dd;
+        color: #0f5132;
+      }
+      .status-onhold {
+        background: #f8d7da;
+        color: #842029;
+      }
+      .details-grid {
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 15px 0;
+      }
+      .detail-item {
+        margin-bottom: 12px;
+        font-size: 13px;
+      }
+      .detail-item:last-child {
+        margin-bottom: 0;
+      }
+      .detail-label {
+        color: #666;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 4px;
+      }
+      .detail-value {
+        color: #333;
+        margin-left: 10px;
+      }
+      .notes-box {
+        background: #fff9e6;
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 4px;
+      }
+      .notes-box p {
+        color: #856404;
+        font-size: 13px;
+        margin: 0;
+        line-height: 1.6;
+      }
+      .expert-card {
+        background: #f0f7ff;
+        border: 1px solid #d0e8ff;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 20px 0;
+      }
+      .expert-name {
+        font-weight: 600;
+        color: #333;
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+      .expert-contact {
+        font-size: 13px;
+        color: #666;
+        line-height: 1.6;
+      }
+      .expert-contact a {
+        color: #667eea;
+        text-decoration: none;
+      }
+      .timeline {
+        list-style: none;
+        margin: 20px 0;
+      }
+      .timeline li {
+        padding: 10px 0;
+        padding-left: 25px;
+        position: relative;
+        font-size: 13px;
+        color: #666;
+        border-left: 2px solid #e9ecef;
+      }
+      .timeline li:before {
+        content: "✓";
+        position: absolute;
+        left: -10px;
+        top: 10px;
+        background: white;
+        color: #28a745;
+        font-weight: bold;
+        font-size: 14px;
+      }
+      .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 30px;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 600;
+        margin-top: 20px;
+        font-size: 14px;
+        transition: transform 0.2s;
+      }
+      .cta-button:hover {
+        transform: translateY(-2px);
+      }
+      .footer-section {
+        background: #f8f9fa;
+        padding: 20px 30px;
+        border-top: 1px solid #e9ecef;
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+      }
+      .divider {
+        height: 1px;
+        background: #e9ecef;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>📋 Status Update on Your Request</h1>
+        <p>Your {{SERVICE_NAME}} request has been updated</p>
+      </div>
+
+      <!-- Content -->
+      <div class="content">
+        <div class="greeting">Hi {{USER_NAME}},</div>
+
+        <p>
+          We're excited to update you on the progress of your {{SERVICE_NAME}}
+          request. Here's the latest status:
+        </p>
+
+        <!-- Status Box -->
+        <div class="status-box">
+          <div class="status-title">Current Status</div>
+          <div class="status-badge status-{{STATUS_LOWER}}">{{STATUS}}</div>
+
+          <div class="details-grid">
+            <div class="detail-item">
+              <span class="detail-label">Request ID:</span>
+              <span class="detail-value">{{REQUEST_ID}}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Service:</span>
+              <span class="detail-value">{{SERVICE_NAME}}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Updated:</span>
+              <span class="detail-value">{{UPDATE_DATE}}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Expected Completion:</span>
+              <span class="detail-value">{{EXPECTED_DATE}}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conditional Sections Based on Status -->
+        {{#IF_ASSIGNED}}
+        <div class="expert-card">
+          <div class="expert-name">👨‍⚖️ Your Assigned Legal Expert</div>
+          <div class="expert-contact">
+            <strong>{{EXPERT_NAME}}</strong><br />
+            Experience: {{EXPERT_EXPERIENCE}}<br /><br />
+            <strong>Contact:</strong><br />
+            WhatsApp: {{EXPERT_PHONE}}<br />
+            Email: <a href="mailto:{{EXPERT_EMAIL}}">{{EXPERT_EMAIL}}</a>
+          </div>
+        </div>
+        {{/IF_ASSIGNED}} {{#IF_INPROGRESS}}
+        <div class="notes-box">
+          <p>
+            🔄 <strong>Work in Progress</strong><br />Your legal expert is
+            currently working on your request. They will contact you soon if
+            they need any additional information.
+          </p>
+        </div>
+        {{/IF_INPROGRESS}} {{#IF_COMPLETED}}
+        <div
+          style="
+            background: #d1e7dd;
+            border-left: 4px solid #0f5132;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+          "
+        >
+          <p
+            style="color: #0f5132; font-size: 13px; margin: 0; line-height: 1.6"
+          >
+            ✅ <strong>Your Request is Complete!</strong><br />
+            Your {{SERVICE_NAME}} is ready. You can download it from your
+            dashboard or we'll send it to you shortly.
+          </p>
+        </div>
+        {{/IF_COMPLETED}}
+
+        <!-- Update Notes -->
+        {{#IF_NOTES}}
+        <div class="notes-box">
+          <p><strong>📝 Updates from Your Expert:</strong><br />{{NOTES}}</p>
+        </div>
+        {{/IF_NOTES}}
+
+        <!-- Progress Timeline -->
+        <div style="margin-top: 25px">
+          <h3
+            style="
+              color: #333;
+              font-size: 14px;
+              margin-bottom: 15px;
+              font-weight: 600;
+            "
+          >
+            Progress Timeline
+          </h3>
+          <ul class="timeline">
+            <li>Payment received and verified</li>
+            <li>
+              {{#IF_ASSIGNED}}<strong>Legal expert assigned</strong
+              >{{/IF_ASSIGNED}}{{^IF_ASSIGNED}}Legal expert assigned
+              (pending){{/IF_ASSIGNED}}
+            </li>
+            <li>
+              {{#IF_INPROGRESS}}<strong>Work in progress</strong
+              >{{/IF_INPROGRESS}}{{^IF_INPROGRESS}}Work in progress
+              (pending){{/IF_INPROGRESS}}
+            </li>
+            <li>
+              {{#IF_COMPLETED}}<strong>Request completed</strong
+              >{{/IF_COMPLETED}}{{^IF_COMPLETED}}Request completed
+              (pending){{/IF_COMPLETED}}
+            </li>
+          </ul>
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="text-align: center">
+          <a href="{{DASHBOARD_URL}}" class="cta-button">View Full Details</a>
+        </div>
+
+        <p
+          style="
+            color: #999;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 20px;
+          "
+        >
+          Need immediate assistance? Contact our support team 24/7.
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer-section">
+        <p>© 2025 Dhanseva Legal Services. All rights reserved.</p>
+        <p style="margin-top: 10px; color: #999">
+          Have questions?
+          <a
+            href="mailto:support@dhanseva.com"
+            style="color: #667eea; text-decoration: none"
+            >Contact Support</a
+          >
+        </p>
+        <p style="margin-top: 5px; color: #999">
+          This is an automated email. Please do not reply to this address.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
