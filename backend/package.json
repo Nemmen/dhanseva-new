@@ -26,7 +26,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@prisma/client": "^5.8.0",
     "axios": "^1.6.2",
     "bcryptjs": "^2.4.3",
     "compression": "^1.8.1",
