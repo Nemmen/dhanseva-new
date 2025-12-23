@@ -17,9 +17,9 @@ export class OtpService {
       // Send email
       await emailTemplate.sendOtpVerification(email, otp, expiryTime.toISOString());
 
-      console.log(`OTP sent to ${email}: ${otp}`);
+      //console.log(`OTP sent to ${email}: ${otp}`);
     } catch (error) {
-      console.error('Error sending OTP:', error);
+      //console.error('Error sending OTP:', error);
       throw new AppError('Failed to send OTP', 500);
     }
   }
@@ -46,10 +46,10 @@ export class OtpService {
         data: { emailVerified: true },
       });
 
-      console.log(`Email verified for ${email}`);
+      //console.log(`Email verified for ${email}`);
     } catch (error) {
       if (error instanceof AppError) throw error;
-      console.error('Error verifying OTP:', error);
+      //console.error('Error verifying OTP:', error);
       throw new AppError('Failed to verify OTP', 500);
     }
   }

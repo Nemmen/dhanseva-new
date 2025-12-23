@@ -5,8 +5,8 @@ import { join } from 'path';
 async function runTests() {
   const tester = new ApiTester('http://localhost:5000');
   
-  console.log('🚀 Starting API Test Suite for Dhanseva Platform\n');
-  console.log(`Timestamp: ${new Date().toISOString()}\n`);
+  //console.log('🚀 Starting API Test Suite for Dhanseva Platform\n');
+  //console.log(`Timestamp: ${new Date().toISOString()}\n`);
 
   await tester.runAllTests();
 
@@ -17,18 +17,18 @@ async function runTests() {
   const passed = results.filter(r => r.status === 'PASS').length;
   const failed = results.filter(r => r.status === 'FAIL').length;
 
-  console.log('\n========== TEST SUMMARY ==========\n');
-  console.log(`Total Tests: ${total}`);
-  console.log(`✅ Passed: ${passed}`);
-  console.log(`❌ Failed: ${failed}`);
-  console.log(`Success Rate: ${((passed / total) * 100).toFixed(2)}%\n`);
+  //console.log('\n========== TEST SUMMARY ==========\n');
+  //console.log(`Total Tests: ${total}`);
+  //console.log(`✅ Passed: ${passed}`);
+  //console.log(`❌ Failed: ${failed}`);
+  //console.log(`Success Rate: ${((passed / total) * 100).toFixed(2)}%\n`);
 
   // Generate markdown report
   const markdownReport = generateMarkdownReport(results);
   const reportPath = join(process.cwd(), 'TEST_RESULTS.md');
   writeFileSync(reportPath, markdownReport);
 
-  console.log(`📄 Full report saved to: ${reportPath}\n`);
+  //console.log(`📄 Full report saved to: ${reportPath}\n`);
 }
 
 function generateMarkdownReport(results: any[]): string {
@@ -134,4 +134,4 @@ function generateMarkdownReport(results: any[]): string {
   return markdown;
 }
 
-runTests().catch(console.error);
+runTests().catch(//console.error);

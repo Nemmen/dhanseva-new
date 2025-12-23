@@ -173,7 +173,7 @@ export class EmployeeService {
         new Date().toLocaleString('en-IN')
       );
     } catch (error) {
-      console.error('Failed to send assignment emails:', error);
+      //console.error('Failed to send assignment emails:', error);
     }
 
     return {
@@ -226,7 +226,7 @@ export class EmployeeService {
         expiresAt.toLocaleDateString('en-IN')
       );
     } catch (error) {
-      console.error('Failed to send DSA invitation email:', error);
+      //console.error('Failed to send DSA invitation email:', error);
     }
 
     return {
@@ -288,7 +288,7 @@ export class EmployeeService {
           'http://localhost:5000/services'
         );
       } catch (error) {
-        console.error('Failed to send completion email:', error);
+        //console.error('Failed to send completion email:', error);
       }
     }
 

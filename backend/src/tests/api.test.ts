@@ -34,14 +34,14 @@ class ApiTester {
   private async recordTest(test: TestResult) {
     this.results.push(test);
     const status = test.status === 'PASS' ? '✅' : '❌';
-    console.log(`${status} [${test.phase}] ${test.method} ${test.endpoint} - ${test.statusCode || 'ERROR'} (${test.duration}ms)`);
+    //console.log(`${status} [${test.phase}] ${test.method} ${test.endpoint} - ${test.statusCode || 'ERROR'} (${test.duration}ms)`);
     if (test.error) {
-      console.log(`   Error: ${test.error}`);
+      //console.log(`   Error: ${test.error}`);
     }
   }
 
   async testPhaseUser() {
-    console.log('\n========== PHASE 1: USER REGISTRATION & AUTH ==========\n');
+    //console.log('\n========== PHASE 1: USER REGISTRATION & AUTH ==========\n');
 
     // Test 1.1: User Registration
     const start1 = Date.now();
@@ -226,7 +226,7 @@ class ApiTester {
   }
 
   async testPhaseDsa() {
-    console.log('\n========== PHASE 2: DSA REGISTRATION & AUTH ==========\n');
+    //console.log('\n========== PHASE 2: DSA REGISTRATION & AUTH ==========\n');
 
     // Test 2.1: DSA Registration
     const start1 = Date.now();
@@ -325,7 +325,7 @@ class ApiTester {
   }
 
   async testPhaseEmployee() {
-    console.log('\n========== PHASE 3: EMPLOYEE REGISTRATION & AUTH ==========\n');
+    //console.log('\n========== PHASE 3: EMPLOYEE REGISTRATION & AUTH ==========\n');
 
     // Test 3.1: Employee Registration
     const start1 = Date.now();
@@ -433,7 +433,7 @@ class ApiTester {
       await this.testPhaseDsa();
       await this.testPhaseEmployee();
     } catch (error) {
-      console.error('Test suite error:', error);
+      //console.error('Test suite error:', error);
     }
   }
 }

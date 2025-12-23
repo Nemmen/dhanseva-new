@@ -134,7 +134,7 @@ export default function DynamicServiceForm({ service }: DynamicServiceFormProps)
         throw new Error(response?.message || 'Failed to submit application - no request ID returned');
       }
     } catch (err: any) {
-      console.error('Submission error:', err);
+      //console.error('Submission error:', err);
       setError(err.message || 'Failed to submit application');
     } finally {
       setIsSubmitting(false);

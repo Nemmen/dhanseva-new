@@ -394,7 +394,7 @@ multer({ storage: memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
 
 ```typescript
 // In logs
-console.log(`[${req.headers["x-request-id"]}] Processing payment...`);
+//console.log(`[${req.headers["x-request-id"]}] Processing payment...`);
 
 // In errors
 throw new Error(`[${req.headers["x-request-id"]}] Payment failed`);

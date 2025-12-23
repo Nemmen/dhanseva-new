@@ -116,7 +116,7 @@ app.use((_req: Request, res: Response) => {
 
 // Global Error Handler
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-  console.error('Error:', err);
+  //console.error('Error:', err);
   
   const statusCode = err.statusCode || 500;
   const message = err.isOperational 

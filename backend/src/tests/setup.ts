@@ -25,7 +25,7 @@ afterEach(async () => {
       try {
         await prisma.$executeRawUnsafe(`TRUNCATE TABLE "public"."${tablename}" CASCADE;`);
       } catch (error) {
-        console.log(`Error truncating ${tablename}:`, error);
+        //console.log(`Error truncating ${tablename}:`, error);
       }
     }
   }

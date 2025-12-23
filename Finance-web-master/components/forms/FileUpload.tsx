@@ -66,7 +66,7 @@ export default function FileUpload({
       onChange(fileData.url);
       toast.success('File uploaded successfully');
     } catch (error) {
-      console.error('Upload error:', error);
+      //console.error('Upload error:', error);
       toast.error('Failed to upload file. Please try again.');
     } finally {
       setIsUploading(false);

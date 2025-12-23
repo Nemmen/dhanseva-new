@@ -330,10 +330,10 @@ const services = [
 ];
 
 async function main() {
-  console.log('🌱 Starting database seed...');
+  //console.log('🌱 Starting database seed...');
 
   // Seed test users
-  console.log('\n👥 Seeding test users...');
+  //console.log('\n👥 Seeding test users...');
   for (const userData of testUsers) {
     const passwordHash = await bcrypt.hash(userData.password, 10);
     
@@ -343,7 +343,7 @@ async function main() {
     });
 
     if (existingUser) {
-      console.log(`  ⏭️  ${userData.email} (already exists)`);
+      //console.log(`  ⏭️  ${userData.email} (already exists)`);
       continue;
     }
 
@@ -376,11 +376,11 @@ async function main() {
       });
     }
 
-    console.log(`  ✓ ${userData.email} (${userData.role})`);
+    //console.log(`  ✓ ${userData.email} (${userData.role})`);
   }
 
   // Upsert all services (create if not exists, update if exists)
-  console.log('\n📦 Seeding services...');
+  //console.log('\n📦 Seeding services...');
   for (const service of services) {
     await prisma.service.upsert({
       where: { id: service.id },
@@ -400,30 +400,30 @@ async function main() {
         isActive: true,
       },
     });
-    console.log(`  ✓ ${service.name}`);
+    //console.log(`  ✓ ${service.name}`);
   }
 
-  console.log(`\n✅ Seeded ${services.length} services successfully!`);
+  //console.log(`\n✅ Seeded ${services.length} services successfully!`);
   
-  console.log('\n📋 Test Login Credentials:');
-  console.log('═══════════════════════════════════════════════');
-  console.log('🔹 USER accounts:');
-  console.log('   Email: user@test.com    | Password: Test@123');
-  console.log('   Email: user2@test.com   | Password: Test@123');
-  console.log('');
-  console.log('🔹 DSA accounts:');
-  console.log('   Email: dsa@test.com     | Password: Test@123');
-  console.log('   Email: dsa2@test.com    | Password: Test@123');
-  console.log('');
-  console.log('🔹 EMPLOYEE accounts:');
-  console.log('   Email: employee@test.com  | Password: Test@123');
-  console.log('   Email: employee2@test.com | Password: Test@123');
-  console.log('═══════════════════════════════════════════════');
+  //console.log('\n📋 Test Login Credentials:');
+  //console.log('═══════════════════════════════════════════════');
+  //console.log('🔹 USER accounts:');
+  //console.log('   Email: user@test.com    | Password: Test@123');
+  //console.log('   Email: user2@test.com   | Password: Test@123');
+  //console.log('');
+  //console.log('🔹 DSA accounts:');
+  //console.log('   Email: dsa@test.com     | Password: Test@123');
+  //console.log('   Email: dsa2@test.com    | Password: Test@123');
+  //console.log('');
+  //console.log('🔹 EMPLOYEE accounts:');
+  //console.log('   Email: employee@test.com  | Password: Test@123');
+  //console.log('   Email: employee2@test.com | Password: Test@123');
+  //console.log('═══════════════════════════════════════════════');
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Seed failed:', e);
+    //console.error('❌ Seed failed:', e);
     process.exit(1);
   })
   .finally(async () => {

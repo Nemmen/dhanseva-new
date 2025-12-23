@@ -14,9 +14,9 @@ export const emailTransporter = nodemailer.createTransport({
 // Verify transporter configuration
 emailTransporter.verify((error: Error | null) => {
   if (error) {
-    console.error('❌ Email transporter configuration error:', error);
+    //console.error('❌ Email transporter configuration error:', error);
   } else {
-    console.log('✅ Email transporter is ready');
+    //console.log('✅ Email transporter is ready');
   }
 });
 
@@ -30,7 +30,7 @@ export const sendEmail = async (to: string, subject: string, html: string) => {
     });
     return info;
   } catch (error) {
-    console.error('Email send error:', error);
+    //console.error('Email send error:', error);
     throw error;
   }
 };

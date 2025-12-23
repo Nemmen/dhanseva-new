@@ -62,7 +62,7 @@ export default function PaymentPage({ params }: PaymentPageProps) {
   };
 
   const handlePaymentFailure = (error: any) => {
-    console.error('Payment failed:', error);
+    //console.error('Payment failed:', error);
     toast.error(error.description || 'Payment failed. Please try again.');
   };
 

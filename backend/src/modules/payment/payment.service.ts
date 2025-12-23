@@ -156,7 +156,7 @@ export class PaymentService {
         `${config.corsOrigin}/requests/${payment.requestId}`
       );
     } catch (error) {
-      console.error('Failed to send payment confirmation email:', error);
+      //console.error('Failed to send payment confirmation email:', error);
     }
 
     return {

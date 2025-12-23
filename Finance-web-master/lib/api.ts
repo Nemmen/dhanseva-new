@@ -39,22 +39,22 @@ api.interceptors.response.use(
       // Let components handle authentication failures appropriately
       if (status === 401) {
         // Just log it, don't redirect
-        console.log('Authentication required:', data.message);
+        //console.log('Authentication required:', data.message);
       }
 
       // Handle 403 Forbidden
       if (status === 403) {
-        console.error('Access forbidden:', data.message);
+        //console.error('Access forbidden:', data.message);
       }
 
       // Handle 404 Not Found
       if (status === 404) {
-        console.error('Resource not found:', data.message);
+        //console.error('Resource not found:', data.message);
       }
 
       // Handle 500 Server Error
       if (status >= 500) {
-        console.error('Server error:', data.message);
+        //console.error('Server error:', data.message);
       }
 
       // Throw error with backend message
