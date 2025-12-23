@@ -256,7 +256,7 @@ export class RequestsService {
           updates.notes
         );
       } catch (error) {
-        //console.error('Failed to send status update email:', error);
+        console.error('Failed to send status update email:', error);
       }
     }
 

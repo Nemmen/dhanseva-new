@@ -165,7 +165,7 @@ export class DsaService {
         new Date().toLocaleDateString('en-IN')
       );
     } catch (error) {
-      //console.error('Failed to send welcome email:', error);
+      console.error('Failed to send welcome email:', error);
     }
 
     return {
@@ -307,7 +307,7 @@ export class DsaService {
           updates.notes
         );
       } catch (error) {
-        //console.error('Failed to send email:', error);
+        console.error('Failed to send email:', error);
       }
     }
 

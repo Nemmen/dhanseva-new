@@ -10,7 +10,7 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction): 
     const { statusCode } = res;
     
     // Log request details (in production, send to logging service)
-    //console.log(`[${new Date().toISOString()}] ${method} ${url} ${statusCode} ${duration}ms - ${ip}`);
+    console.log(`[${new Date().toISOString()}] ${method} ${url} ${statusCode} ${duration}ms - ${ip}`);
   });
 
   next();

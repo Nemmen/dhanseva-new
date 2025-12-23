@@ -71,13 +71,13 @@ function logTest(
   });
 
   const emoji = status === 'PASS' ? '✅' : '❌';
-  //console.log(`${emoji} [${phase}] ${method} ${endpoint} - ${status} (${statusCode || 'N/A'})`);
-  if (errorMessage) //console.log(`   Error: ${errorMessage}`);
+  console.log(`${emoji} [${phase}] ${method} ${endpoint} - ${status} (${statusCode || 'N/A'})`);
+  if (errorMessage) console.log(`   Error: ${errorMessage}`);
 }
 
 // Test Phase 1: User Registration and Authentication
 async function phase1_UserAuth() {
-  //console.log('\n=== PHASE 1: USER REGISTRATION & AUTHENTICATION ===\n');
+  console.log('\n=== PHASE 1: USER REGISTRATION & AUTHENTICATION ===\n');
 
   // Test 1: Register User 1
   try {
@@ -154,7 +154,7 @@ async function phase1_UserAuth() {
 
 // Test Phase 2: Services and Requests
 async function phase2_ServicesAndRequests() {
-  //console.log('\n=== PHASE 2: SERVICES & REQUESTS ===\n');
+  console.log('\n=== PHASE 2: SERVICES & REQUESTS ===\n');
 
   // Test 7: Get all services
   try {
@@ -243,7 +243,7 @@ async function phase2_ServicesAndRequests() {
 
 // Test Phase 3: Payment Processing
 async function phase3_Payments() {
-  //console.log('\n=== PHASE 3: PAYMENT PROCESSING ===\n');
+  console.log('\n=== PHASE 3: PAYMENT PROCESSING ===\n');
 
   // Test 13: Create payment order
   if (requestId) {
@@ -286,7 +286,7 @@ async function phase3_Payments() {
 
 // Test Phase 4: DSA Registration and Operations
 async function phase4_DSA() {
-  //console.log('\n=== PHASE 4: DSA REGISTRATION & OPERATIONS ===\n');
+  console.log('\n=== PHASE 4: DSA REGISTRATION & OPERATIONS ===\n');
 
   // Test 15: Register DSA
   try {
@@ -312,7 +312,7 @@ async function phase4_DSA() {
       otp: '123456',
     });
   } catch (error) {
-    //console.log('DSA verification skipped');
+    console.log('DSA verification skipped');
   }
 
   // Login as DSA
@@ -393,10 +393,10 @@ async function phase4_DSA() {
 
 // Test Phase 5: Employee Operations (requires employee account)
 async function phase5_Employee() {
-  //console.log('\n=== PHASE 5: EMPLOYEE OPERATIONS ===\n');
+  console.log('\n=== PHASE 5: EMPLOYEE OPERATIONS ===\n');
 
-  //console.log('⚠️  Employee tests require manual database role update');
-  //console.log('⚠️  Update a user role to EMPLOYEE in database to test these endpoints\n');
+  console.log('⚠️  Employee tests require manual database role update');
+  console.log('⚠️  Update a user role to EMPLOYEE in database to test these endpoints\n');
 
   // Test 20: Get all requests (Employee)
   try {
@@ -527,17 +527,17 @@ function generateReport() {
   // Write report
   const reportPath = path.join(__dirname, 'TEST_RESULTS.md');
   fs.writeFileSync(reportPath, markdown);
-  //console.log(`\n📄 Report generated: ${reportPath}`);
+  console.log(`\n📄 Report generated: ${reportPath}`);
 }
 
 // Main execution
 async function runAllTests() {
-  //console.log('🚀 Starting comprehensive API tests...\n');
-  //console.log('Using test accounts:');
-  //console.log(`  - User 1: ${testUsers.user1.email}`);
-  //console.log(`  - User 2: ${testUsers.user2.email}`);
-  //console.log(`  - DSA: ${testUsers.dsa.email}`);
-  //console.log('');
+  console.log('🚀 Starting comprehensive API tests...\n');
+  console.log('Using test accounts:');
+  console.log(`  - User 1: ${testUsers.user1.email}`);
+  console.log(`  - User 2: ${testUsers.user2.email}`);
+  console.log(`  - DSA: ${testUsers.dsa.email}`);
+  console.log('');
 
   try {
     await phase1_UserAuth();
@@ -546,10 +546,10 @@ async function runAllTests() {
     await phase4_DSA();
     await phase5_Employee();
   } catch (error) {
-    //console.error('Test execution error:', error);
+    console.error('Test execution error:', error);
   } finally {
     generateReport();
-    //console.log('\n✅ All tests completed!');
+    console.log('\n✅ All tests completed!');
   }
 }
 

@@ -275,7 +275,7 @@ Visit `http://localhost:3000` and verify:
 
 ### 4. Test API Connection
 
-Open browser //console and check:
+Open browser console and check:
 
 - No CORS errors
 - API calls to `http://localhost:5000/api/services` succeed
@@ -397,7 +397,7 @@ If you encounter issues:
 1. Check backend is running: `http://localhost:5000/api/services`
 2. Verify environment variables
 3. Clear browser cache
-4. Check browser //console for errors
+4. Check browser console for errors
 5. Verify all dependencies installed
 
 ## 📖 Documentation References

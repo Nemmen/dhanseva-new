@@ -351,7 +351,7 @@ import { emailTemplate } from "./modules/email/template.service";
 try {
   await emailTemplate.sendOtpVerification(user.email, generatedOTP, expiryTime);
 } catch (error) {
-  //console.error("Email send failed:", error);
+  console.error("Email send failed:", error);
   // Handle error appropriately
 }
 ```

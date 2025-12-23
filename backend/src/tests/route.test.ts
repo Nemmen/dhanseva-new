@@ -41,9 +41,9 @@ class RouteTester {
     this.results.push(test);
     const icon = test.status === 'PASS' ? '✅' : test.status === 'FAIL' ? '❌' : '⏭️';
     const detail = test.statusCode ? `[${test.statusCode}]` : '[CONNECTION ERROR]';
-    //console.log(`${icon} ${test.phase.padEnd(10)} | ${test.routeName.padEnd(25)} | ${test.method.padEnd(4)} ${test.endpoint.padEnd(30)} ${detail.padEnd(20)} | ${test.duration}ms`);
+    console.log(`${icon} ${test.phase.padEnd(10)} | ${test.routeName.padEnd(25)} | ${test.method.padEnd(4)} ${test.endpoint.padEnd(30)} ${detail.padEnd(20)} | ${test.duration}ms`);
     if (test.error) {
-      //console.log(`   └─ Error: ${test.error}`);
+      console.log(`   └─ Error: ${test.error}`);
     }
   }
 
@@ -92,13 +92,13 @@ class RouteTester {
   }
 
   async runAllTests() {
-    //console.log('\n🚀 Starting API Route Test Suite for Dhanseva Platform\n');
-    //console.log('=' .repeat(150));
-    //console.log('PHASE      | ROUTE NAME                | METHOD | ENDPOINT                       | STATUS               | DURATION');
-    //console.log('=' .repeat(150));
+    console.log('\n🚀 Starting API Route Test Suite for Dhanseva Platform\n');
+    console.log('=' .repeat(150));
+    console.log('PHASE      | ROUTE NAME                | METHOD | ENDPOINT                       | STATUS               | DURATION');
+    console.log('=' .repeat(150));
 
     // PHASE 1: USER REGISTRATION & AUTH
-    //console.log('\n📍 PHASE 1: USER REGISTRATION & AUTHENTICATION\n');
+    console.log('\n📍 PHASE 1: USER REGISTRATION & AUTHENTICATION\n');
     
     await this.testRoute('Phase 1', 'User Registration', 'POST', '/api/auth/register', {
       email: this.testEmails.user,
@@ -122,7 +122,7 @@ class RouteTester {
     await this.testRoute('Phase 1', 'User Logout', 'POST', '/api/auth/logout', {}, 200);
 
     // PHASE 2: DSA REGISTRATION & AUTH
-    //console.log('\n📍 PHASE 2: DSA REGISTRATION & AUTHENTICATION\n');
+    console.log('\n📍 PHASE 2: DSA REGISTRATION & AUTHENTICATION\n');
     
     await this.testRoute('Phase 2', 'DSA Registration', 'POST', '/api/auth/register', {
       email: this.testEmails.dsa,
@@ -138,7 +138,7 @@ class RouteTester {
     await this.testRoute('Phase 2', 'DSA Logout', 'POST', '/api/auth/logout', {}, 200);
 
     // PHASE 3: EMPLOYEE REGISTRATION & AUTH
-    //console.log('\n📍 PHASE 3: EMPLOYEE REGISTRATION & AUTHENTICATION\n');
+    console.log('\n📍 PHASE 3: EMPLOYEE REGISTRATION & AUTHENTICATION\n');
     
     await this.testRoute('Phase 3', 'Employee Registration', 'POST', '/api/auth/register', {
       email: this.testEmails.employee,
@@ -154,7 +154,7 @@ class RouteTester {
     await this.testRoute('Phase 3', 'Employee Logout', 'POST', '/api/auth/logout', {}, 200);
 
     // ERROR CASES
-    //console.log('\n📍 ERROR CASES\n');
+    console.log('\n📍 ERROR CASES\n');
     
     await this.testRoute('Error Cases', 'Invalid Email Format', 'POST', '/api/auth/register', {
       email: 'invalidemail',
@@ -194,13 +194,13 @@ class RouteTester {
     const failed = this.results.filter(r => r.status === 'FAIL').length;
     const skipped = this.results.filter(r => r.status === 'SKIP').length;
 
-    //console.log('\n' + '=' .repeat(150));
-    //console.log('\n📊 TEST SUMMARY\n');
-    //console.log(`Total Tests: ${total}`);
-    //console.log(`✅ Passed:   ${passed}`);
-    //console.log(`❌ Failed:   ${failed}`);
-    //console.log(`⏭️ Skipped:  ${skipped}`);
-    //console.log(`Success Rate: ${((passed / (total - skipped)) * 100).toFixed(2)}%\n`);
+    console.log('\n' + '=' .repeat(150));
+    console.log('\n📊 TEST SUMMARY\n');
+    console.log(`Total Tests: ${total}`);
+    console.log(`✅ Passed:   ${passed}`);
+    console.log(`❌ Failed:   ${failed}`);
+    console.log(`⏭️ Skipped:  ${skipped}`);
+    console.log(`Success Rate: ${((passed / (total - skipped)) * 100).toFixed(2)}%\n`);
 
     let markdown = `# 📋 Dhanseva API Route Test Results\n\n`;
     markdown += `**Generated:** ${timestamp}\n`;
@@ -317,10 +317,10 @@ async function main() {
     
     const reportPath = join(process.cwd(), 'TEST_RESULTS.md');
     writeFileSync(reportPath, markdown);
-    //console.log(`\n📄 Full report saved to: TEST_RESULTS.md\n`);
+    console.log(`\n📄 Full report saved to: TEST_RESULTS.md\n`);
     
   } catch (error) {
-    //console.error('Test execution error:', error);
+    console.error('Test execution error:', error);
     process.exit(1);
   }
 }

@@ -222,7 +222,7 @@ app.use(
 
 1. Verify backend is running on port 5000
 2. Check `NEXT_PUBLIC_API_BASE_URL` in `.env.local`
-3. Open browser //console for errors
+3. Open browser console for errors
 
 ### Issue: shadcn Components Missing
 

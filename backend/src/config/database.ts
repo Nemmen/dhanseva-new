@@ -22,9 +22,9 @@ export async function connectDatabase() {
   const client = getPrisma();
   try {
     await client.$connect();
-    //console.log('✅ Database connection established');
+    console.log('✅ Database connection established');
   } catch (error) {
-    //console.error('❌ Database connection failed:', error);
+    console.error('❌ Database connection failed:', error);
     throw error;
   }
 }
