@@ -32,7 +32,7 @@ export default function Footer() {
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-sm sm:text-lg">DS</span>
+                <img src='/logo.png' className='h-auto w-48'></img>
               </div>
               <div>
                 <h3 className="text-lg sm:text-xl font-bold">DhanSeva</h3>
@@ -43,16 +43,16 @@ export default function Footer() {
               Your trusted financial partner providing comprehensive legal and financial solutions.
             </p>
             <div className="flex space-x-2 sm:space-x-3">
-              <a href="#" title="Facebook" aria-label="Visit our Facebook page" className="w-7 h-7 sm:w-8 sm:h-8 bg-gray-800 hover:bg-primary-500 rounded-full flex items-center justify-center transition-colors">
+              <a href="https://www.facebook.com/share/1BkeWAZYWc/" title="Facebook" aria-label="Visit our Facebook page" className="w-7 h-7 sm:w-8 sm:h-8 bg-gray-800 hover:bg-primary-500 rounded-full flex items-center justify-center transition-colors">
                 <FaFacebook className="w-3 h-3 sm:w-4 sm:h-4" />
               </a>
               <a href="#" title="Twitter" aria-label="Visit our Twitter page" className="w-7 h-7 sm:w-8 sm:h-8 bg-gray-800 hover:bg-primary-500 rounded-full flex items-center justify-center transition-colors">
                 <FaTwitter className="w-3 h-3 sm:w-4 sm:h-4" />
               </a>
-              <a href="#" title="LinkedIn" aria-label="Visit our LinkedIn page" className="w-7 h-7 sm:w-8 sm:h-8 bg-gray-800 hover:bg-primary-500 rounded-full flex items-center justify-center transition-colors">
+              <a href="https://www.linkedin.com/in/dhan-seva-3566823a1/" title="LinkedIn" aria-label="Visit our LinkedIn page" className="w-7 h-7 sm:w-8 sm:h-8 bg-gray-800 hover:bg-primary-500 rounded-full flex items-center justify-center transition-colors">
                 <FaLinkedin className="w-3 h-3 sm:w-4 sm:h-4" />
               </a>
-              <a href="#" title="Instagram" aria-label="Visit our Instagram page" className="w-7 h-7 sm:w-8 sm:h-8 bg-gray-800 hover:bg-primary-500 rounded-full flex items-center justify-center transition-colors">
+              <a href="https://www.facebook.com/share/1BkeWAZYWc/" title="Instagram" aria-label="Visit our Instagram page" className="w-7 h-7 sm:w-8 sm:h-8 bg-gray-800 hover:bg-primary-500 rounded-full flex items-center justify-center transition-colors">
                 <FaInstagram className="w-3 h-3 sm:w-4 sm:h-4" />
               </a>
             </div>
@@ -102,7 +102,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center space-x-2 sm:space-x-3 text-xs sm:text-sm text-gray-400">
                 <FaPhone className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
-                <span>+91 XXXXX XXXXX</span>
+                <span>+91 8510002953</span>
               </li>
               <li className="flex items-center space-x-2 sm:space-x-3 text-xs sm:text-sm text-gray-400">
                 <FaEnvelope className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
