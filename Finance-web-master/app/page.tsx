@@ -89,7 +89,7 @@ export default function HomePage() {
   return (
     <MainLayout>
       {/* ===== HERO SLIDER SECTION ===== */}
-      <section className="relative h-[95vh] sm:h-[55vh] text-white overflow-hidden py-2">
+      <section className="relative h-[80vh] sm:h-[55vh] text-white overflow-hidden py-2">
         {/* ================= BACKGROUND ================= */}
         {sliderData.map((slide, index) => (
           <div
@@ -120,7 +120,7 @@ export default function HomePage() {
             </div>
 
             {/* Heading */}
-            <h1 className="text-4xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-snug">
+            <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-snug">
               भरोसे का साथ, तुरंत लोन आपके पास
             </h1>
 
@@ -163,9 +163,9 @@ export default function HomePage() {
               index === current && (
                 <div
                   key={slide.id}
-                  className="bg-white/10 backdrop-blur-md rounded-2xl p-5 sm:p-8 space-y-4"
+                  className="bg-white/10 backdrop-blur-md rounded-2xl p-5 sm:p-8 space-y-2"
                 >
-                  <h3 className="text-xl sm:text-3xl font-bold">
+                  <h3 className="text-lg sm:text-3xl font-bold">
                     {slide.name}
                   </h3>
 

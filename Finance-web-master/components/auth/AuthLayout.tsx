@@ -15,7 +15,8 @@ export default function AuthLayout({ children, title, subtitle }: AuthLayoutProp
         <div className="text-center mb-6 sm:mb-8">
           <Link href="/" className="inline-block">
             <h1 className="text-3xl sm:text-4xl font-bold text-blue-600">DhanSeva</h1>
-            <p className="text-xs sm:text-sm text-gray-600 mt-1">Your Financial Services Partner</p>
+            <p className="text-sm font-[600] sm:text-sm text-gray-600 mt-1">Up to <span className='text-blue-600 font-bold'>₹50 Lakhs</span> personal loan</p>
+            <p className="text-xs sm:text-sm text-blue-600 mt-1">starting @ 8.5% per annum</p>
           </Link>
         </div>
 

@@ -229,9 +229,8 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-1">Visit Us</h3>
                   <p className="text-gray-700">
-                    DhanSeva Headquarters<br />
-                    Mumbai, Maharashtra<br />
-                    India - 400001
+                    Masoodpur, Sector B, Vasant Kunj, <br />
+                    New Delhi, Delhi-110070<br />
                   </p>
                 </div>
               </div>
