@@ -232,7 +232,7 @@ export default function HomePage() {
             // IMPORTANT: limit services when collapsed
             const visibleServices = isExpanded
               ? categoryServices
-              : categoryServices.slice(0, 4);
+              : categoryServices.slice(0, 6);
 
             return (
               <div
@@ -259,24 +259,24 @@ export default function HomePage() {
                     <Link
                       key={service.id}
                       href={`/apply/${service.id}`}
-                      className="bg-white rounded-lg p-3 sm:p-6 hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-primary-500 group"
+                      className="bg-white rounded-lg p-2 sm:p-4 hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-primary-500 group"
                     >
-                      <div className="flex flex-col items-center text-center h-full">
-                        <div className="w-10 h-10 sm:w-16 sm:h-16 bg-primary-50 rounded-full flex items-center justify-center mb-2 sm:mb-4 group-hover:bg-primary-100 transition-colors">
-                          <span className="text-xl sm:text-3xl">
+                      <div className="flex flex-col items-center text-center h-min">
+                        <div className="w-5 h-5 sm:w-16 sm:h-16 bg-primary-50 rounded-full flex items-center justify-center mb-1 sm:mb-2 group-hover:bg-primary-100 transition-colors">
+                          <span className="text-xl sm:text-2xl">
                             {service.icon}
                           </span>
                         </div>
 
-                        <h4 className="font-semibold text-gray-900 mb-1 sm:mb-2 line-clamp-2 min-h-[2rem] sm:min-h-[3rem] text-xs sm:text-base">
+                        <h4 className="font-semibold text-gray-900 mb-1 sm:mb-2 line-clamp-2 min-h-[1rem] sm:min-h-[2rem] text-xs sm:text-base">
                           {service.name}
                         </h4>
 
-                        <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 line-clamp-2 hidden sm:block">
-                          {service.description.slice(0, 60)}...
+                        <p className="text-xs sm:text-sm text-gray-600 mb-1 sm:mb-2 line-clamp-2 hidden sm:block">
+                          {service.description.slice(0, 30)}...
                         </p>
 
-                        <div className="mt-auto">
+                        <div className="mt-1">
                           <span className="text-primary-600 font-[700] rounded-lg text-sm">
                             Apply Now
                           </span>
