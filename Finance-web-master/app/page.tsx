@@ -89,7 +89,7 @@ export default function HomePage() {
   return (
     <MainLayout>
       {/* ===== HERO SLIDER SECTION ===== */}
-      <section className="relative h-[80vh] sm:h-[55vh] text-white overflow-hidden py-2">
+      <section className="relative h-[80vh] sm:h-[95vh] text-white overflow-hidden py-2">
         {/* ================= BACKGROUND ================= */}
         {sliderData.map((slide, index) => (
           <div
@@ -112,7 +112,7 @@ export default function HomePage() {
           {/* ---------- LEFT (CONSTANT CONTENT) ---------- */}
           <div className="space-y-2 sm:space-y-5 text-center md:text-left flex flex-col justify-center">
             {/* Badge */}
-            <div className="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 lg:mt-2 rounded-full text-[10px] sm:text-sm mx-auto md:mx-0">
+            <div className="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] sm:text-sm mx-auto md:mx-0">
               <span className="flex items-center gap-1.5">
                 <FaCheckCircle className="text-xs sm:text-sm" />
                 Trusted by 10,000+ customers
@@ -125,12 +125,12 @@ export default function HomePage() {
             </h1>
 
             {/* Sub heading */}
-            <h2 className="text-sm sm:text-xl md:text-2xl font-semibold lg:mt-[-20px]">
+            <h2 className="text-sm sm:text-xl md:text-2xl font-semibold ">
               DhanSeva – Your Trusted Financial Partner
             </h2>
 
             {/* Description */}
-            <p className="text-[11px] sm:text-base md:text-lg text-white/90 max-w-xl lg:mb-[-5px] mx-auto md:mx-0 lg:mt-[-15px]">
+            <p className="text-[11px] sm:text-base md:text-lg text-white/90 max-w-xl mx-auto md:mx-0 ">
               Complete Financial & Legal Solutions at your fingertips. All
               services at minimum cost
             </p>
