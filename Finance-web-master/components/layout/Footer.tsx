@@ -15,6 +15,7 @@ export default function Footer() {
     legal: [
       { name: 'Terms & Conditions', href: '/terms' },
       { name: 'Privacy Policy', href: '/privacy' },
+      { name: 'Customer Consent & Disclaimer', href: '/consent' },
       { name: 'Refund Policy', href: '/refund' },
     ],
     services: [
@@ -98,7 +99,7 @@ export default function Footer() {
             <ul className="space-y-2 sm:space-y-3">
               <li className="flex items-start space-x-2 sm:space-x-3 text-xs sm:text-sm text-gray-400">
                 <FaMapMarkerAlt className="w-3 h-3 sm:w-4 sm:h-4 mt-0.5 flex-shrink-0" />
-                <span>Mumbai, Maharashtra, India</span>
+                <span>Masoodpur, Sector B, Vasant Kunj, New Delhi, Delhi-110070</span>
               </li>
               <li className="flex items-center space-x-2 sm:space-x-3 text-xs sm:text-sm text-gray-400">
                 <FaPhone className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
