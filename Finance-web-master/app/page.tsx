@@ -25,11 +25,22 @@ const heroImages = [
 
 export default function HomePage() {
   const [current, setCurrent] = useState(0);
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+
+  const toggleCategory = (categoryId: string) => {
+    setExpandedCategories((prev) =>
+      prev.includes(categoryId)
+        ? prev.filter((id) => id !== categoryId)
+        : [...prev, categoryId]
+    );
+  };
+
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % heroImages.length);
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % sliderData.length);
     }, 5000);
-    return () => clearInterval(timer);
+
+    return () => clearInterval(interval);
   }, []);
 
   const prevSlide = () => {
@@ -39,6 +50,11 @@ export default function HomePage() {
   const nextSlide = () => {
     setCurrent((prev) => (prev + 1) % heroImages.length);
   };
+
+  const sliderData = SERVICE_CATEGORIES.map((category) => ({
+    ...category,
+    services: SERVICES.filter((s) => s.category === category.id).slice(0, 4),
+  }));
 
   const features = [
     {
@@ -64,8 +80,8 @@ export default function HomePage() {
   ];
 
   const stats = [
-    { value: "10K+", label: "Happy Clients", icon: FaUsers },
-    { value: "500+", label: "Expert Professionals", icon: FaAward },
+    { value: "50K+", label: "Happy Clients", icon: FaUsers },
+    { value: "1000+", label: "Expert Professionals", icon: FaAward },
     { value: "24/7", label: "Customer Support", icon: FaClock },
     { value: "100%", label: "Secure Platform", icon: FaShieldAlt },
   ];
@@ -73,154 +89,126 @@ export default function HomePage() {
   return (
     <MainLayout>
       {/* ===== HERO SLIDER SECTION ===== */}
-      <section
-        className="
-    relative text-white overflow-hidden
-    h-[35vh] sm:h-[45vh] md:h-auto
-  "
-      >
-        {/* ================= BACKGROUND SLIDER ================= */}
-        <div className="absolute inset-0">
-          {heroImages.map((img, index) => (
-            <div
-              key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                index === current ? "opacity-100" : "opacity-0"
-              }`}
-              style={{
-                backgroundImage: `url(${img})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            />
-          ))}
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-600/40 to-primary-500/40"></div>
-        </div>
+      <section className="relative h-[95vh] sm:h-[55vh] text-white overflow-hidden py-2">
+        {/* ================= BACKGROUND ================= */}
+        {sliderData.map((slide, index) => (
+          <div
+            key={slide.id}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              index === current ? "opacity-100" : "opacity-0"
+            }`}
+            style={{
+              backgroundImage: `url(${slide.image})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          >
+            <div className="absolute inset-0 bg-black/60" />
+          </div>
+        ))}
 
         {/* ================= CONTENT ================= */}
-        <div className="relative container-custom h-full py-4 sm:py-10 md:py-24">
-          <div className="grid md:grid-cols-2 gap-4 md:gap-8 items-center h-full">
-            {/* ---------- LEFT CONTENT ---------- */}
-            <div className="space-y-2 sm:space-y-5 text-center md:text-left flex flex-col justify-center">
-              {/* Badge */}
-              <div className="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] sm:text-sm mx-auto md:mx-0">
-                <span className="flex items-center gap-1.5">
-                  <FaCheckCircle className="text-xs sm:text-sm" />
-                  Trusted by 10,000+ customers
-                </span>
-              </div>
-
-              {/* Heading */}
-              <h1 className="text-lg sm:text-3xl md:text-5xl lg:text-6xl font-bold leading-snug">
-                भरोसे का साथ, तुरंत लोन आपके पास
-              </h1>
-
-              {/* Sub heading */}
-              <h2 className="text-xs sm:text-xl md:text-3xl font-semibold">
-                DhanSeva – Your Trusted Financial Partner
-              </h2>
-
-              {/* Description (clamped on mobile) */}
-              <p className="text-[11px] sm:text-base md:text-lg text-white/90 max-w-xl mx-auto md:mx-0 line-clamp-2 sm:line-clamp-none">
-                Complete Financial & Legal Solutions at your fingertips. All
-                services at just ₹99
-              </p>
-
-              {/* Buttons – ALWAYS VISIBLE */}
-              <div className="flex flex-row gap-2 sm:gap-4 justify-center md:justify-start mt-2 sm:mt-4">
-                <Link
-                  href="#services"
-                  className="
-              bg-white text-primary-600 hover:bg-gray-100 font-semibold
-              py-2 sm:py-3 px-4 sm:px-8
-              rounded-md sm:rounded-lg
-              inline-flex items-center justify-center gap-1.5
-              text-xs sm:text-base
-              whitespace-nowrap
-            "
-                >
-                  Start Your Service{" "}
-                  <FaArrowRight className="text-xs sm:text-base" />
-                </Link>
-
-                <Link
-                  href="/dsa-register"
-                  className="
-              border-2 border-white hover:bg-white hover:text-primary-600 font-semibold
-              py-2 sm:py-3 px-4 sm:px-8
-              rounded-md sm:rounded-lg
-              text-xs sm:text-base
-              whitespace-nowrap
-            "
-                >
-                  Join as DSA
-                </Link>
-              </div>
+        <div className="relative container-custom h-full grid md:grid-cols-2 gap-1 lg:gap-8 items-center">
+          {/* ---------- LEFT (CONSTANT CONTENT) ---------- */}
+          <div className="space-y-2 sm:space-y-5 text-center md:text-left flex flex-col justify-center">
+            {/* Badge */}
+            <div className="inline-block bg-white/20 backdrop-blur-sm px-3 py-1 lg:mt-2 rounded-full text-[10px] sm:text-sm mx-auto md:mx-0">
+              <span className="flex items-center gap-1.5">
+                <FaCheckCircle className="text-xs sm:text-sm" />
+                Trusted by 10,000+ customers
+              </span>
             </div>
 
-            {/* ---------- RIGHT CARD (DESKTOP ONLY) ---------- */}
-            <div className="hidden md:block">
-              <div className="relative">
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-2xl rotate-3"></div>
-                <div className="relative bg-white rounded-2xl p-6 shadow-2xl">
-                  <div className="space-y-4">
-                    {features.map((feature, index) => (
-                      <div key={index} className="flex items-start gap-3">
-                        <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-                          <feature.icon className="w-5 h-5 text-primary-600" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-gray-900">
-                            {feature.title}
-                          </h3>
-                          <p className="text-sm text-gray-600">
-                            {feature.description}
-                          </p>
-                        </div>
-                      </div>
+            {/* Heading */}
+            <h1 className="text-4xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-snug">
+              भरोसे का साथ, तुरंत लोन आपके पास
+            </h1>
+
+            {/* Sub heading */}
+            <h2 className="text-sm sm:text-xl md:text-2xl font-semibold lg:mt-[-20px]">
+              DhanSeva – Your Trusted Financial Partner
+            </h2>
+
+            {/* Description */}
+            <p className="text-[11px] sm:text-base md:text-lg text-white/90 max-w-xl lg:mb-[-5px] mx-auto md:mx-0 lg:mt-[-15px]">
+              Complete Financial & Legal Solutions at your fingertips. All
+              services at minimum cost
+            </p>
+
+            {/* Buttons */}
+            <div className="flex flex-row gap-2 sm:gap-4 justify-center md:justify-start mt-2 sm:mt-4">
+              <Link
+                href="#services"
+                className="bg-white text-primary-600 hover:bg-gray-100 font-semibold
+          py-1 sm:py-2 px-3 sm:px-6 rounded-md sm:rounded-lg
+          inline-flex items-center gap-1.5 text-xs sm:text-base"
+              >
+                Start Your Service <FaArrowRight />
+              </Link>
+
+              <Link
+                href="/dsa-register"
+                className="border-2 border-white hover:bg-white hover:text-primary-600
+          font-semibold py-1 sm:py-2 px-4 sm:px-8 rounded-md sm:rounded-lg
+          text-xs sm:text-base"
+              >
+                Join as DSA
+              </Link>
+            </div>
+          </div>
+
+          {/* ---------- RIGHT (DYNAMIC SERVICE CONTENT) ---------- */}
+          {sliderData.map(
+            (slide, index) =>
+              index === current && (
+                <div
+                  key={slide.id}
+                  className="bg-white/10 backdrop-blur-md rounded-2xl p-5 sm:p-8 space-y-4"
+                >
+                  <h3 className="text-xl sm:text-3xl font-bold">
+                    {slide.name}
+                  </h3>
+
+                  <p className="text-white/90 text-sm sm:text-base">
+                    {slide.description}
+                  </p>
+
+                  {/* Services Preview */}
+                  <ul className="grid grid-cols-2 gap-2 text-sm">
+                    {slide.services.map((service) => (
+                      <li key={service.id} className="flex items-center gap-2">
+                        <span>{service.icon}</span>
+                        <span>{service.name}</span>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
+
+                  {/* CTA */}
+                  <Link
+                    href={`#${slide.id}`}
+                    className="inline-block mt-4 bg-white text-primary-600 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100"
+                  >
+                    Apply Now
+                  </Link>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          {/* ================= SLIDER BUTTONS ================= */}
-          <button
-            onClick={prevSlide}
-            className="absolute left-1 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 p-2 rounded-full"
-          >
-            <FaChevronLeft className="text-sm" />
-          </button>
-
-          <button
-            onClick={nextSlide}
-            className="absolute right-1 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 p-2 rounded-full"
-          >
-            <FaChevronRight className="text-sm" />
-          </button>
+              )
+          )}
         </div>
-      </section>
 
-      {/* Stats Section */}
-      <section className="bg-white py-6 sm:py-8 border-b">
-        <div className="container-custom">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="flex justify-center mb-2 sm:mb-3">
-                  <stat.icon className="text-primary-600 w-8 h-8 sm:w-12 sm:h-12" />
-                </div>
-                <div className="text-xl sm:text-3xl md:text-4xl font-bold text-primary-600 mb-1 sm:mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-xs sm:text-sm text-gray-600">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* ================= NAVIGATION ================= */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 p-2 rounded-full"
+        >
+          <FaChevronLeft />
+        </button>
+
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/30 p-2 rounded-full"
+        >
+          <FaChevronRight />
+        </button>
       </section>
 
       {/* Our Services Section */}
@@ -239,8 +227,20 @@ export default function HomePage() {
               (s) => s.category === category.id
             );
 
+            const isExpanded = expandedCategories.includes(category.id);
+
+            // IMPORTANT: limit services when collapsed
+            const visibleServices = isExpanded
+              ? categoryServices
+              : categoryServices.slice(0, 4);
+
             return (
-              <div key={category.id} className="mb-10 sm:mb-16">
+              <div
+                key={category.id}
+                id={category.id}
+                className="mb-10 sm:mb-16 scroll-mt-28"
+              >
+                {/* Heading */}
                 <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6 px-1">
                   <span className="text-2xl sm:text-4xl">{category.icon}</span>
                   <div>
@@ -253,34 +253,50 @@ export default function HomePage() {
                   </div>
                 </div>
 
+                {/* Services Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-                  {categoryServices.map((service) => (
+                  {visibleServices.map((service) => (
                     <Link
                       key={service.id}
                       href={`/apply/${service.id}`}
                       className="bg-white rounded-lg p-3 sm:p-6 hover:shadow-lg transition-all duration-300 border border-gray-200 hover:border-primary-500 group"
                     >
-                      <div className="flex flex-col items-center text-center">
+                      <div className="flex flex-col items-center text-center h-full">
                         <div className="w-10 h-10 sm:w-16 sm:h-16 bg-primary-50 rounded-full flex items-center justify-center mb-2 sm:mb-4 group-hover:bg-primary-100 transition-colors">
                           <span className="text-xl sm:text-3xl">
                             {service.icon}
                           </span>
                         </div>
+
                         <h4 className="font-semibold text-gray-900 mb-1 sm:mb-2 line-clamp-2 min-h-[2rem] sm:min-h-[3rem] text-xs sm:text-base">
                           {service.name}
                         </h4>
+
                         <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 line-clamp-2 hidden sm:block">
                           {service.description.slice(0, 60)}...
                         </p>
+
                         <div className="mt-auto">
-                          <span className="text-primary-600 font-bold text-sm sm:text-lg">
-                            ₹{service.price}/-
+                          <span className="text-primary-600 font-[700] rounded-lg text-sm">
+                            Apply Now
                           </span>
                         </div>
                       </div>
                     </Link>
                   ))}
                 </div>
+
+                {/* View More / View Less Button */}
+                {categoryServices.length > 4 && (
+                  <div className="flex justify-center mt-4">
+                    <button
+                      onClick={() => toggleCategory(category.id)}
+                      className="text-primary-600 font-semibold text-sm sm:text-base hover:underline"
+                    >
+                      {isExpanded ? "View Less" : "View More"}
+                    </button>
+                  </div>
+                )}
               </div>
             );
           })}
@@ -341,6 +357,27 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Stats Section */}
+      <section className="bg-white py-6 sm:py-8 border-b">
+        <div className="container-custom">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8">
+            {stats.map((stat, index) => (
+              <div key={index} className="text-center">
+                <div className="flex justify-center mb-2 sm:mb-3">
+                  <stat.icon className="text-primary-600 w-8 h-8 sm:w-12 sm:h-12" />
+                </div>
+                <div className="text-xl sm:text-3xl md:text-4xl font-bold text-primary-600 mb-1 sm:mb-2">
+                  {stat.value}
+                </div>
+                <div className="text-xs sm:text-sm text-gray-600">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="bg-gradient-to-r from-primary-600 to-secondary-600 text-white py-10 sm:py-16">
         <div className="container-custom text-center px-4">
@@ -362,15 +399,14 @@ export default function HomePage() {
       </section>
 
       <a
-      href="https://wa.me/918510002954"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="fixed bottom-5 right-5 z-50 bg-green-500 hover:bg-green-600 text-white p-2 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center"
-      aria-label="Chat on WhatsApp"
-    >
-      <FaWhatsapp size={38} />
-    </a>
-
+        href="https://wa.me/918510002954"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-5 right-5 z-50 bg-green-500 hover:bg-green-600 text-white p-2 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center"
+        aria-label="Chat on WhatsApp"
+      >
+        <FaWhatsapp size={38} />
+      </a>
     </MainLayout>
   );
 }
