@@ -1466,7 +1466,7 @@ export const SERVICE_CATEGORIES = [
   },
   {
     id: "BUSINESS_LEGAL",
-    name: "Business / Startup Legal Services",
+    name: "Business / Startup Financial Services",
     description: "Legal support for businesses and startups",
     icon: "💼",
     image: "/images/hero3.jpg",
