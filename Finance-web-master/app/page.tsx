@@ -89,7 +89,7 @@ export default function HomePage() {
   return (
     <MainLayout>
       {/* ===== HERO SLIDER SECTION ===== */}
-      <section className="relative h-[80vh] sm:h-[95vh] text-white overflow-hidden py-2">
+      <section className="relative h-[92vh] sm:h-[95vh] text-white overflow-hidden py-2">
         {/* ================= BACKGROUND ================= */}
         {sliderData.map((slide, index) => (
           <div
@@ -120,7 +120,7 @@ export default function HomePage() {
             </div>
 
             {/* Heading */}
-            <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-snug">
+            <h1 className="text-4xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-snug">
               भरोसे का साथ, तुरंत लोन आपके पास
             </h1>
 
