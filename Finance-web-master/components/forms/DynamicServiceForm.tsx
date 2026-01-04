@@ -90,37 +90,27 @@ export default function DynamicServiceForm({ service }: DynamicServiceFormProps)
     setError(null);
 
     try {
-      // Prepare form data (excluding file objects for now)
-      // In production, you'd upload files separately or use base64
+      // Validate that all required document URLs are present
+      const requiredDocs = ['aadhaarFrontUrl', 'aadhaarBackUrl', 'panFrontUrl'];
+      const missingDocs = requiredDocs.filter(doc => !data[doc] || !data[doc].startsWith('http'));
+      
+      if (missingDocs.length > 0) {
+        throw new Error('Please upload all required documents before submitting');
+      }
+
+      // Prepare form data - all file URLs should already be uploaded to UploadThing
       const applicationData: Record<string, any> = {};
       Object.keys(data).forEach(key => {
+        // Skip File objects if any exist
         if (!(data[key] instanceof File)) {
           applicationData[key] = data[key];
         }
       });
 
-      // File references (names only for now - implement file upload separately)
-      const files: Record<string, string> = {};
-      if (data.aadhaarFront instanceof File) {
-        files.aadhaarFront = data.aadhaarFront.name;
-      }
-      if (data.aadhaarBack instanceof File) {
-        files.aadhaarBack = data.aadhaarBack.name;
-      }
-      if (data.panFront instanceof File) {
-        files.panFront = data.panFront.name;
-      }
-      if (data.panBack instanceof File) {
-        files.panBack = data.panBack.name;
-      }
-
-      // Submit to backend as JSON
+      // Submit to backend as JSON with proper document URLs
       const response: any = await api.post('/requests', {
         serviceId: service.id,
-        formData: {
-          ...applicationData,
-          uploadedFiles: files,
-        },
+        formData: applicationData,
       });
 
       // Response is already unwrapped by axios interceptor
@@ -305,11 +295,12 @@ function ReviewStep({
   service: ServiceDetail;
   formConfig: ServiceFormConfig | null;
 }) {
-  const excludeFields = ['aadhaarFront', 'aadhaarBack', 'panFront', 'panBack'];
+  const documentFields = ['aadhaarFrontUrl', 'aadhaarBackUrl', 'panFrontUrl', 'panBackUrl'];
   
   const formatFieldName = (name: string): string => {
     return name
       .replace(/([A-Z])/g, ' $1')
+      .replace(/Url$/, '')
       .replace(/^./, str => str.toUpperCase())
       .trim();
   };
@@ -322,7 +313,11 @@ function ReviewStep({
   };
 
   const filledFields = Object.entries(formData).filter(
-    ([key, value]) => !excludeFields.includes(key) && value !== '' && value !== undefined
+    ([key, value]) => !documentFields.includes(key) && value !== '' && value !== undefined
+  );
+
+  const uploadedDocs = documentFields.filter(
+    field => formData[field] && formData[field].startsWith('http')
   );
 
   return (
@@ -360,18 +355,22 @@ function ReviewStep({
       {/* Documents Summary */}
       <div className="bg-gray-50 rounded-lg p-4">
         <h4 className="font-medium text-gray-800 mb-2">Uploaded Documents</h4>
-        <ul className="text-sm space-y-1">
-          {formData.aadhaarFront && (
-            <li className="text-green-600">✓ Aadhaar Front uploaded</li>
-          )}
-          {formData.aadhaarBack && (
-            <li className="text-green-600">✓ Aadhaar Back uploaded</li>
-          )}
-          {formData.panFront && (
-            <li className="text-green-600">✓ PAN Card uploaded</li>
-          )}
-          {formData.panBack && (
-            <li className="text-green-600">✓ PAN Back uploaded</li>
+        <ul className="text-sm space-y-2">
+          {uploadedDocs.map(field => (
+            <li key={field} className="flex items-center justify-between">
+              <span className="text-green-600">✓ {formatFieldName(field)}</span>
+              <a
+                href={formData[field]}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-700 text-xs underline"
+              >
+                View
+              </a>
+            </li>
+          ))}
+          {uploadedDocs.length === 0 && (
+            <li className="text-red-500">⚠ No documents uploaded</li>
           )}
         </ul>
       </div>

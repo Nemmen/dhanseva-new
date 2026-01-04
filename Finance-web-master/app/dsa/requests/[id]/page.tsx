@@ -38,6 +38,7 @@ const STATUS_TRANSITIONS: Record<string, RequestStatus[]> = {
   'COMPLETED': [],
   'CANCELLED': [],
 };
+import { useUploadThing } from '@/lib/uploadthing';
 
 // Status options for dropdown
 const STATUS_OPTIONS: { value: RequestStatus; label: string; icon: React.ElementType; color: string }[] = [
@@ -48,15 +49,76 @@ const STATUS_OPTIONS: { value: RequestStatus; label: string; icon: React.Element
   { value: 'CANCELLED', label: 'Cancelled', icon: FiXCircle, color: 'red' },
 ];
 
-// Document preview component
+// Document preview component with edit capability for DSA
 const DocumentPreview = ({ 
   label, 
-  url 
+  url,
+  canEdit = false,
+  onReplace,
 }: { 
   label: string; 
   url?: string;
+  canEdit?: boolean;
+  onReplace?: (newUrl: string) => void;
 }) => {
-  if (!url) return null;
+  const [isUploading, setIsUploading] = useState(false);
+  
+  const { startUpload } = useUploadThing('fileReplacement', {
+    onClientUploadComplete: (res) => {
+      if (res && res[0] && onReplace) {
+        onReplace(res[0].ufsUrl || res[0].url);
+        toast.success('Document updated successfully');
+      }
+      setIsUploading(false);
+    },
+    onUploadError: (error) => {
+      toast.error(error.message || 'Failed to upload file');
+      setIsUploading(false);
+    },
+  });
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !onReplace) return;
+
+    if (file.size > 4 * 1024 * 1024) {
+      toast.error('File size must be less than 4MB');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      await startUpload([file]);
+    } catch {
+      toast.error('Failed to upload file');
+      setIsUploading(false);
+    }
+  };
+
+  if (!url) {
+    return (
+      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
+        <div className="text-center">
+          <FiFileText className="mx-auto text-gray-400 mb-2" size={32} />
+          <p className="text-sm text-gray-500">{label}</p>
+          <p className="text-xs text-gray-400">Not uploaded</p>
+          {canEdit && onReplace && (
+            <label className="mt-2 inline-block cursor-pointer">
+              <input
+                type="file"
+                accept="image/*,.pdf"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+              <span className="text-xs text-blue-600 hover:text-blue-700">
+                Upload now
+              </span>
+            </label>
+          )}
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="border rounded-lg p-3 bg-gray-50">
@@ -82,10 +144,26 @@ const DocumentPreview = ({
           >
             <FiDownload size={18} />
           </a>
+          {canEdit && onReplace && (
+            <label className="cursor-pointer text-orange-600 hover:text-orange-700" title="Replace document">
+              <input
+                type="file"
+                accept="image/*,.pdf"
+                className="hidden"
+                onChange={handleFileChange}
+                disabled={isUploading}
+              />
+              {isUploading ? (
+                <FiLoader className="animate-spin" size={18} />
+              ) : (
+                <FiEdit3 size={18} />
+              )}
+            </label>
+          )}
         </div>
       </div>
       <div className="aspect-video bg-white rounded border overflow-hidden">
-        {url.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+        {url.match(/\.(jpg|jpeg|png|gif|webp)$/i) || url.includes('utfs.io') ? (
           <img
             src={url}
             alt={label}
@@ -155,6 +233,24 @@ export default function DsaRequestDetailPage({ params }: RequestDetailPageProps)
       toast.error(error.message || 'Failed to update status');
     },
   });
+
+  // Document update mutation
+  const documentMutation = useMutation({
+    mutationFn: (documents: Record<string, string>) => 
+      dsaService.updateRequestDocuments(params.id, documents),
+    onSuccess: () => {
+      toast.success('Document updated successfully!');
+      queryClient.invalidateQueries({ queryKey: ['dsa-request', params.id] });
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Failed to update document');
+    },
+  });
+
+  // Handle document replacement
+  const handleDocumentReplace = (fieldName: string, newUrl: string) => {
+    documentMutation.mutate({ [fieldName]: newUrl });
+  };
 
   // Available status transitions
   const availableTransitions = useMemo(() => {
@@ -435,10 +531,30 @@ export default function DsaRequestDetailPage({ params }: RequestDetailPageProps)
               Uploaded Documents
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <DocumentPreview label="Aadhaar Front" url={baseData.aadhaarFrontUrl} />
-              <DocumentPreview label="Aadhaar Back" url={baseData.aadhaarBackUrl} />
-              <DocumentPreview label="PAN Front" url={baseData.panFrontUrl} />
-              <DocumentPreview label="PAN Back" url={baseData.panBackUrl} />
+              <DocumentPreview 
+                label="Aadhaar Front" 
+                url={baseData.aadhaarFrontUrl}
+                canEdit={true}
+                onReplace={(url) => handleDocumentReplace('aadhaarFrontUrl', url)}
+              />
+              <DocumentPreview 
+                label="Aadhaar Back" 
+                url={baseData.aadhaarBackUrl}
+                canEdit={true}
+                onReplace={(url) => handleDocumentReplace('aadhaarBackUrl', url)}
+              />
+              <DocumentPreview 
+                label="PAN Front" 
+                url={baseData.panFrontUrl}
+                canEdit={true}
+                onReplace={(url) => handleDocumentReplace('panFrontUrl', url)}
+              />
+              <DocumentPreview 
+                label="PAN Back" 
+                url={baseData.panBackUrl}
+                canEdit={true}
+                onReplace={(url) => handleDocumentReplace('panBackUrl', url)}
+              />
             </div>
             {!baseData.aadhaarFrontUrl && !baseData.panFrontUrl && (
               <p className="text-gray-500 text-sm text-center py-4">

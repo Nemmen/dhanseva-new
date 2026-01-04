@@ -10,6 +10,13 @@ import {
   EmployeeAnalytics,
 } from '@/types/employee.types';
 
+interface DocumentUpdatePayload {
+  aadhaarFrontUrl?: string;
+  aadhaarBackUrl?: string;
+  panFrontUrl?: string;
+  panBackUrl?: string;
+}
+
 class EmployeeService {
   /**
    * Get all requests with filters
@@ -60,6 +67,14 @@ class EmployeeService {
    */
   async updateRequest(id: string, payload: UpdateRequestPayload): Promise<{ id: string; status: string }> {
     const response = await api.patch(`/employee/requests/${id}`, payload);
+    return response.data;
+  }
+
+  /**
+   * Update request documents (replace files)
+   */
+  async updateRequestDocuments(id: string, documents: DocumentUpdatePayload): Promise<{ id: string; documents: DocumentUpdatePayload }> {
+    const response = await api.patch(`/requests/${id}/documents`, { documents });
     return response.data;
   }
 

@@ -80,6 +80,7 @@ import requestsRoutes from './modules/requests/requests.routes';
 import paymentRoutes from './modules/payment/payment.routes';
 import dsaRoutes from './modules/dsa/dsa.routes';
 import employeeRoutes from './modules/employee/employee.routes';
+import uploadRoutes from './modules/upload/upload.routes';
 
 app.get('/api', (_req: Request, res: Response) => {
   res.json({
@@ -93,6 +94,7 @@ app.get('/api', (_req: Request, res: Response) => {
       payments: '/api/payments',
       dsa: '/api/dsa',
       employee: '/api/employee',
+      upload: '/api/upload',
     },
   });
 });
@@ -105,6 +107,7 @@ app.use('/api/requests', requestsRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/dsa', dsaRoutes);
 app.use('/api/employee', employeeRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // 404 Handler
 app.use((_req: Request, res: Response) => {

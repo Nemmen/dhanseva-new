@@ -61,3 +61,16 @@ export const updateRequest = asyncHandler(async (req: Request, res: Response) =>
   const updated = await requestsService.updateRequest(id, user, { status, notes, estimatedCompletion });
   return sendSuccess(res, updated, 'Request updated successfully', 200);
 });
+
+export const updateDocuments = asyncHandler(async (req: Request, res: Response) => {
+  const user = (req as any).user;
+  const { id } = req.params;
+  const { documents } = req.body;
+
+  if (!documents) {
+    throw new AppError('Documents data is required', 400);
+  }
+
+  const updated = await requestsService.updateDocuments(id, user, documents);
+  return sendSuccess(res, updated, 'Documents updated successfully', 200);
+});

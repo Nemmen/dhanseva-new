@@ -8,6 +8,7 @@ import { employeeService } from '@/services/employeeService';
 import { RequestStatus, UpdateRequestPayload } from '@/types/employee.types';
 import { toast } from 'sonner';
 import ConfirmationModal from '@/components/ui/ConfirmationModal';
+import { useUploadThing } from '@/lib/uploadthing';
 import {
   FiArrowLeft,
   FiLoader,
@@ -49,9 +50,76 @@ const STATUS_OPTIONS: { value: RequestStatus; label: string; color: string }[] =
   { value: 'CANCELLED', label: 'Cancelled', color: 'red' },
 ];
 
-// Document preview component
-const DocumentPreview = ({ label, url }: { label: string; url?: string }) => {
-  if (!url) return null;
+// Document preview component with edit capability
+const DocumentPreview = ({ 
+  label, 
+  url, 
+  canEdit = false,
+  onReplace,
+}: { 
+  label: string; 
+  url?: string;
+  canEdit?: boolean;
+  onReplace?: (newUrl: string) => void;
+}) => {
+  const [isUploading, setIsUploading] = useState(false);
+  
+  const { startUpload } = useUploadThing('fileReplacement', {
+    onClientUploadComplete: (res) => {
+      if (res && res[0] && onReplace) {
+        onReplace(res[0].ufsUrl || res[0].url);
+        toast.success('Document replaced successfully!');
+      }
+      setIsUploading(false);
+    },
+    onUploadError: (error) => {
+      toast.error(error.message || 'Failed to upload file');
+      setIsUploading(false);
+    },
+  });
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !onReplace) return;
+
+    if (file.size > 4 * 1024 * 1024) {
+      toast.error('File size must be less than 4MB');
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      await startUpload([file]);
+    } catch {
+      toast.error('Failed to upload file');
+      setIsUploading(false);
+    }
+  };
+
+  if (!url) {
+    return (
+      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
+        <div className="text-center">
+          <FiFileText className="mx-auto text-gray-400 mb-2" size={32} />
+          <p className="text-sm text-gray-500">{label}</p>
+          <p className="text-xs text-gray-400">Not uploaded</p>
+          {canEdit && onReplace && (
+            <label className="mt-2 inline-block cursor-pointer">
+              <input
+                type="file"
+                accept="image/*,.pdf"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+              <span className="text-xs text-indigo-600 hover:text-indigo-700">
+                Upload now
+              </span>
+            </label>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="border rounded-lg p-3 bg-gray-50">
@@ -70,10 +138,26 @@ const DocumentPreview = ({ label, url }: { label: string; url?: string }) => {
           <a href={url} download className="text-green-600 hover:text-green-700" title="Download document">
             <FiDownload size={18} />
           </a>
+          {canEdit && onReplace && (
+            <label className="cursor-pointer text-orange-600 hover:text-orange-700" title="Replace document">
+              <input
+                type="file"
+                accept="image/*,.pdf"
+                className="hidden"
+                onChange={handleFileChange}
+                disabled={isUploading}
+              />
+              {isUploading ? (
+                <FiLoader className="animate-spin" size={18} />
+              ) : (
+                <FiEdit3 size={18} />
+              )}
+            </label>
+          )}
         </div>
       </div>
       <div className="aspect-video bg-white rounded border overflow-hidden">
-        {url.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+        {url.match(/\.(jpg|jpeg|png|gif|webp)$/i) || url.includes('utfs.io') ? (
           <img src={url} alt={label} className="w-full h-full object-contain" />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-400">
@@ -93,6 +177,7 @@ const AuditLogItem = ({ log }: { log: any }) => {
     UPDATE_STATUS: 'Status Updated',
     DATA_EDITED: 'Data Edited',
     PAYMENT_SUCCESS: 'Payment Received',
+    DOCUMENTS_UPDATED: 'Documents Updated',
   };
 
   return (
@@ -179,6 +264,24 @@ export default function EmployeeRequestDetailPage({ params }: RequestDetailPageP
       toast.error(error.message || 'Failed to assign DSA');
     },
   });
+
+  // Document update mutation
+  const documentMutation = useMutation({
+    mutationFn: (documents: Record<string, string>) => 
+      employeeService.updateRequestDocuments(params.id, documents),
+    onSuccess: () => {
+      toast.success('Document updated successfully!');
+      queryClient.invalidateQueries({ queryKey: ['employee-request', params.id] });
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Failed to update document');
+    },
+  });
+
+  // Handle document replacement
+  const handleDocumentReplace = (fieldName: string, newUrl: string) => {
+    documentMutation.mutate({ [fieldName]: newUrl });
+  };
 
   // Available status transitions
   const availableTransitions = useMemo(() => {
@@ -406,18 +509,37 @@ export default function EmployeeRequestDetailPage({ params }: RequestDetailPageP
             )}
           </div>
 
-          {/* Documents (Read-only) */}
+          {/* Documents - with Edit capability for Employee */}
           <div className="bg-white rounded-xl shadow-sm border p-4 sm:p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <FiFileText className="text-indigo-600" />
               Uploaded Documents
-              <span className="text-xs font-normal text-gray-400 ml-2">(View Only)</span>
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <DocumentPreview label="Aadhaar Front" url={baseData.aadhaarFrontUrl} />
-              <DocumentPreview label="Aadhaar Back" url={baseData.aadhaarBackUrl} />
-              <DocumentPreview label="PAN Front" url={baseData.panFrontUrl} />
-              <DocumentPreview label="PAN Back" url={baseData.panBackUrl} />
+              <DocumentPreview 
+                label="Aadhaar Front" 
+                url={baseData.aadhaarFrontUrl} 
+                canEdit={true}
+                onReplace={(url) => handleDocumentReplace('aadhaarFrontUrl', url)}
+              />
+              <DocumentPreview 
+                label="Aadhaar Back" 
+                url={baseData.aadhaarBackUrl}
+                canEdit={true}
+                onReplace={(url) => handleDocumentReplace('aadhaarBackUrl', url)}
+              />
+              <DocumentPreview 
+                label="PAN Front" 
+                url={baseData.panFrontUrl}
+                canEdit={true}
+                onReplace={(url) => handleDocumentReplace('panFrontUrl', url)}
+              />
+              <DocumentPreview 
+                label="PAN Back" 
+                url={baseData.panBackUrl}
+                canEdit={true}
+                onReplace={(url) => handleDocumentReplace('panBackUrl', url)}
+              />
             </div>
             {!baseData.aadhaarFrontUrl && !baseData.panFrontUrl && (
               <p className="text-gray-500 text-sm text-center py-4">No documents uploaded</p>

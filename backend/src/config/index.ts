@@ -39,7 +39,7 @@ export const config = {
 
   // UploadThing
   uploadthing: {
-    token: process.env.UPLOADTHING_TOKEN!,
+    token: process.env.UPLOADTHING_SECRET!,
   },
 
   // Email
@@ -51,7 +51,7 @@ export const config = {
   },
 
   // CORS
-  corsOrigin: process.env.CORS_ORIGIN || 'https://dhanseva-web.vercel.app',
+  corsOrigin: process.env.CORS_ORIGIN || 'https://www.dhansevaindia.com',
 
   // Service Pricing
   pricing: {
@@ -75,7 +75,7 @@ const requiredEnvVars = [
   'SESSION_SECRET',
   'RAZORPAY_KEY_ID',
   'RAZORPAY_KEY_SECRET',
-  'UPLOADTHING_TOKEN',
+  'UPLOADTHING_SECRET',
   'EMAIL_USER',
   'EMAIL_PASSWORD',
 ];

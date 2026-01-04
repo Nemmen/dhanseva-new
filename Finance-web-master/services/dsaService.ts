@@ -6,6 +6,14 @@ import {
   StatusUpdatePayload 
 } from '@/types/dsa.types';
 
+interface DocumentUpdatePayload {
+  aadhaarFrontUrl?: string;
+  aadhaarBackUrl?: string;
+  panFrontUrl?: string;
+  panBackUrl?: string;
+  [key: string]: string | undefined;
+}
+
 class DsaService {
   /**
    * Get all requests assigned to the DSA
@@ -42,6 +50,17 @@ class DsaService {
   ): Promise<{ id: string; status: string; updatedAt: string }> {
     const response: any = await api.patch(`/dsa/requests/${requestId}`, payload);
     return response.data;
+  }
+
+  /**
+   * Update request documents (replace existing documents with new URLs)
+   */
+  async updateRequestDocuments(
+    requestId: string,
+    documents: DocumentUpdatePayload
+  ): Promise<{ success: boolean; data: DsaRequestDetail }> {
+    const response: any = await api.patch(`/service-requests/${requestId}/documents`, documents);
+    return response;
   }
 
   /**

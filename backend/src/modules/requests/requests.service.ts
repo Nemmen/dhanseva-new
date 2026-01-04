@@ -266,4 +266,75 @@ export class RequestsService {
       updatedAt: updated.updatedAt,
     };
   }
+
+  async updateDocuments(id: string, user: any, documents: any) {
+    const request = await prisma.serviceRequest.findUnique({
+      where: { id },
+      include: {
+        createdBy: true,
+      },
+    });
+
+    if (!request) {
+      throw new AppError('Request not found', 404);
+    }
+
+    // Authorization check - only DSA assigned to request or EMPLOYEE can update documents
+    const isAssignedDsa = request.filledByDsaId === user.id && user.role === 'DSA';
+    const isEmployee = user.role === 'EMPLOYEE';
+
+    if (!isAssignedDsa && !isEmployee) {
+      throw new AppError('Unauthorized to update documents for this request', 403);
+    }
+
+    // Merge existing formData with new document URLs
+    const existingFormData = (request.formData as Record<string, any>) || {};
+    const updatedFormData = {
+      ...existingFormData,
+      aadhaarFrontUrl: documents.aadhaarFrontUrl || existingFormData.aadhaarFrontUrl,
+      aadhaarBackUrl: documents.aadhaarBackUrl || existingFormData.aadhaarBackUrl,
+      panFrontUrl: documents.panFrontUrl || existingFormData.panFrontUrl,
+      panBackUrl: documents.panBackUrl || existingFormData.panBackUrl,
+    };
+
+    // Update request with new documents
+    const updated = await prisma.serviceRequest.update({
+      where: { id },
+      data: {
+        formData: updatedFormData,
+      },
+    });
+
+    // Create audit log
+    await prisma.auditLog.create({
+      data: {
+        requestId: id,
+        performedBy: user.id,
+        action: 'DOCUMENTS_UPDATED',
+        oldValue: {
+          aadhaarFrontUrl: existingFormData.aadhaarFrontUrl,
+          aadhaarBackUrl: existingFormData.aadhaarBackUrl,
+          panFrontUrl: existingFormData.panFrontUrl,
+          panBackUrl: existingFormData.panBackUrl,
+        },
+        newValue: {
+          aadhaarFrontUrl: updatedFormData.aadhaarFrontUrl,
+          aadhaarBackUrl: updatedFormData.aadhaarBackUrl,
+          panFrontUrl: updatedFormData.panFrontUrl,
+          panBackUrl: updatedFormData.panBackUrl,
+        },
+      },
+    });
+
+    return {
+      id: updated.id,
+      documents: {
+        aadhaarFrontUrl: updatedFormData.aadhaarFrontUrl,
+        aadhaarBackUrl: updatedFormData.aadhaarBackUrl,
+        panFrontUrl: updatedFormData.panFrontUrl,
+        panBackUrl: updatedFormData.panBackUrl,
+      },
+      updatedAt: updated.updatedAt,
+    };
+  }
 }
