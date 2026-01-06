@@ -1,7 +1,8 @@
 import nodemailer from 'nodemailer';
+import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { config } from './index';
 
-export const emailTransporter = nodemailer.createTransport({
+const transportOptions: SMTPTransport.Options = {
   host: config.email.host,
   port: config.email.port,
   secure: false, // true for 465, false for other ports
@@ -17,9 +18,9 @@ export const emailTransporter = nodemailer.createTransport({
   connectionTimeout: 10000, // 10 seconds
   greetingTimeout: 10000,
   socketTimeout: 20000,
-  pool: false, // Disable pooling for serverless
-  maxConnections: 1,
-});
+};
+
+export const emailTransporter = nodemailer.createTransport(transportOptions);
 
 // Skip verification in serverless environment (Vercel)
 if (process.env.VERCEL !== '1') {
