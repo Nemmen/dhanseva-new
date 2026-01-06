@@ -67,7 +67,7 @@ const DocumentPreview = ({
   const { startUpload } = useUploadThing('fileReplacement', {
     onClientUploadComplete: (res) => {
       if (res && res[0] && onReplace) {
-        onReplace(res[0].ufsUrl || res[0].url);
+        onReplace(res[0].url);
         toast.success('Document replaced successfully!');
       }
       setIsUploading(false);

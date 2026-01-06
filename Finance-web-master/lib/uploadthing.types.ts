@@ -1,35 +1,9 @@
-// UploadThing file router types (must match backend)
+// UploadThing file router types
+// This should ideally be imported from backend, but for now we declare it
 export type OurFileRouter = {
-  documentUpload: {
-    input: void;
-    output: {
-      url: string;
-      name: string;
-      size: number;
-      key: string;
-      uploadedBy: string;
-    };
-  };
-  multiDocumentUpload: {
-    input: void;
-    output: {
-      url: string;
-      name: string;
-      size: number;
-      key: string;
-    };
-  };
-  fileReplacement: {
-    input: void;
-    output: {
-      url: string;
-      name: string;
-      size: number;
-      key: string;
-      replacedBy: string;
-      replacedAt: string;
-    };
-  };
+  documentUpload: any;
+  multiDocumentUpload: any;
+  fileReplacement: any;
 };
 
 // Upload response type
