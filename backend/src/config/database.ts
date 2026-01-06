@@ -16,3 +16,15 @@ export const prisma: PrismaClient =
 if (process.env.NODE_ENV !== 'production') {
   globalForPrisma.prisma = prisma;
 }
+
+// Function to test database connection
+export async function connectDatabase(): Promise<void> {
+  try {
+    await prisma.$connect();
+    console.log('✅ [DATABASE] Connected successfully to Supabase');
+    console.log(`🔗 [DATABASE] Using connection pooler: ${process.env.DATABASE_URL?.includes('pooler') ? 'YES' : 'NO'}`);
+  } catch (error: any) {
+    console.error('❌ [DATABASE] Connection failed:', error.message);
+    throw error;
+  }
+}
