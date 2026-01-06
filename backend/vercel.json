@@ -7,9 +7,24 @@
       "config": {
         "includeFiles": [
           "prisma/schema.prisma",
-          "node_modules/.prisma/**"
+          "node_modules/.prisma/**",
+          "src/templates/**"
         ]
       }
     }
-  ]
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.ts"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "api/index.ts": {
+      "maxDuration": 30
+    }
+  }
 }
