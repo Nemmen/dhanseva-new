@@ -9,12 +9,23 @@ export const emailTransporter = nodemailer.createTransport({
     user: config.email.user,
     pass: config.email.password,
   },
+  // Added for better compatibility with cloud providers
+  tls: {
+    rejectUnauthorized: false,
+    minVersion: 'TLSv1.2'
+  },
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 10000,
+  socketTimeout: 20000,
+  pool: true,
+  maxConnections: 5,
+  maxMessages: 10,
 });
 
-// Verify transporter configuration
+// Verify transporter configuration (non-blocking)
 emailTransporter.verify((error: Error | null) => {
   if (error) {
-    console.error('❌ Email transporter configuration error:', error);
+    console.error('❌ Email transporter configuration error:', error.message);
   } else {
     console.log('✅ Email transporter is ready');
   }
