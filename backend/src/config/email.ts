@@ -17,19 +17,20 @@ export const emailTransporter = nodemailer.createTransport({
   connectionTimeout: 10000, // 10 seconds
   greetingTimeout: 10000,
   socketTimeout: 20000,
-  pool: true,
-  maxConnections: 5,
-  maxMessages: 10,
+  pool: false, // Disable pooling for serverless
+  maxConnections: 1,
 });
 
-// Verify transporter configuration (non-blocking)
-emailTransporter.verify((error: Error | null) => {
-  if (error) {
-    console.error('❌ Email transporter configuration error:', error.message);
-  } else {
-    console.log('✅ Email transporter is ready');
-  }
-});
+// Skip verification in serverless environment (Vercel)
+if (process.env.VERCEL !== '1') {
+  emailTransporter.verify((error: Error | null) => {
+    if (error) {
+      console.error('❌ Email transporter configuration error:', error.message);
+    } else {
+      console.log('✅ Email transporter is ready');
+    }
+  });
+}
 
 export const sendEmail = async (to: string, subject: string, html: string) => {
   try {

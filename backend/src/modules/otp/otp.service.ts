@@ -1,4 +1,4 @@
-import { redisClient } from '../../config/redis';
+import { getRedisClient } from '../../config/redis';
 import { generateOTP } from '../../utils/generators';
 import { emailTemplate } from '../email/template.service';
 import { AppError } from '../../middleware/errorHandler';
@@ -11,8 +11,9 @@ export class OtpService {
       const otp = generateOTP();
       const expiryTime = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
 
-      // Store in Redis with 5-minute TTL
-      await redisClient.setEx(`otp:${email}`, 300, otp);
+      // Get Redis client and store OTP with 5-minute TTL
+      const redis = await getRedisClient();
+      await redis.setEx(`otp:${email}`, 300, otp);
 
       // Send email
       await emailTemplate.sendOtpVerification(email, otp, expiryTime.toISOString());
@@ -26,8 +27,9 @@ export class OtpService {
 
   async verifyOtp(email: string, otp: string) {
     try {
-      // Get OTP from Redis
-      const storedOtp = await redisClient.get(`otp:${email}`);
+      // Get Redis client and OTP from Redis
+      const redis = await getRedisClient();
+      const storedOtp = await redis.get(`otp:${email}`);
 
       if (!storedOtp) {
         throw new AppError('OTP has expired', 400);
@@ -38,7 +40,7 @@ export class OtpService {
       }
 
       // Delete OTP after verification
-      await redisClient.del(`otp:${email}`);
+      await redis.del(`otp:${email}`);
 
       // Update user's emailVerified status in database
       await prisma.user.update({
