@@ -10,6 +10,10 @@ import { requestLogger, requestId, securityHeaders } from './middleware/apiMiddl
 
 const app: Application = express();
 
+// Trust proxy - Required for Render deployment
+// This allows Express to trust the X-Forwarded-For header
+app.set('trust proxy', 1);
+
 // Request tracking
 app.use(requestId);
 
