@@ -4,12 +4,15 @@ import { AppError } from '../../middleware/errorHandler';
 
 export class AuthService {
   async register(email: string, password: string, role: 'USER' | 'DSA' | 'EMPLOYEE') {
+    console.log('[AUTH_SERVICE] Starting registration for:', email);
+    
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
 
     if (existingUser) {
+      console.log('[AUTH_SERVICE] User already exists:', email);
       throw new AppError('User with this email already exists', 409);
     }
 
@@ -27,26 +30,36 @@ export class AuthService {
       throw new AppError('Password must contain at least one special character (!@#$%^&*)', 400);
     }
 
+    console.log('[AUTH_SERVICE] Password validation passed');
+
     // Hash password
     const hashedPassword = await hashPassword(password);
+    console.log('[AUTH_SERVICE] Password hashed');
 
     // Create user
-    const user = await prisma.user.create({
-      data: {
-        email,
-        passwordHash: hashedPassword,
-        role,
-        emailVerified: false,
-      },
-    });
+    try {
+      const user = await prisma.user.create({
+        data: {
+          email,
+          passwordHash: hashedPassword,
+          role,
+          emailVerified: false,
+        },
+      });
 
-    return {
-      id: user.id,
-      email: user.email,
-      role: user.role,
-      emailVerified: user.emailVerified,
-      createdAt: user.createdAt,
-    };
+      console.log('[AUTH_SERVICE] User created:', user.id);
+
+      return {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        emailVerified: user.emailVerified,
+        createdAt: user.createdAt,
+      };
+    } catch (error: any) {
+      console.error('[AUTH_SERVICE] Database error:', error.message);
+      throw new AppError('Failed to create user. Please try again.', 500);
+    }
   }
 
   async login(email: string, password: string) {

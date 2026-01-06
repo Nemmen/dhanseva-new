@@ -9,12 +9,20 @@ const authService = new AuthService();
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const { email, password, role } = req.body;
 
+  console.log('[REGISTER] Attempt:', { email, role });
+
   if (!email || !password || !role) {
     throw new AppError('Email, password, and role are required', 400);
   }
 
-  const user = await authService.register(email, password, role);
-  return sendSuccess(res, user, 'Registration successful', 201);
+  try {
+    const user = await authService.register(email, password, role);
+    console.log('[REGISTER] Success:', user.id);
+    return sendSuccess(res, user, 'Registration successful', 201);
+  } catch (error: any) {
+    console.error('[REGISTER] Error:', error.message, error.stack);
+    throw error;
+  }
 });
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
