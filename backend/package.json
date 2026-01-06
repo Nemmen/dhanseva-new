@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "prisma generate && tsc && npm run copy-templates",
+    "postinstall": "prisma generate",
     "copy-templates": "node -e \"require('fs').cpSync('src/templates', 'dist/templates', {recursive: true})\"",
     "start": "node dist/server.js",
     "prisma:generate": "prisma generate",
