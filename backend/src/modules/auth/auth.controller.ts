@@ -34,13 +34,17 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
   const { user, token } = await authService.login(email, password);
 
-  res.cookie('dhanseva_token', token, {
+  // Set cookie with proper configuration for production
+  const cookieOptions: any = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     path: '/',
-  });
+  };
+
+  // In production, don't set domain to allow subdomain access
+  res.cookie('dhanseva_token', token, cookieOptions);
 
   return sendSuccess(res, user, 'Login successful', 200);
 });

@@ -35,10 +35,10 @@ export default function LoginForm() {
       setIsLoading(true);
       const userData: any = await login(data.email, data.password);
       
-      // Small delay to ensure state updates
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
       toast.success('Login successful!');
+      
+      // Wait a bit longer to ensure cookie is properly set
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       // Check for redirect parameter in URL
       const searchParams = new URLSearchParams(window.location.search);
@@ -56,20 +56,21 @@ export default function LoginForm() {
         
         // Only block if trying to access wrong role's area
         if (isDsaRoute && userData?.role !== 'DSA') {
-          router.replace('/');
+          window.location.href = '/';
         } else if (isEmployeeRoute && userData?.role !== 'EMPLOYEE') {
-          router.replace('/');
+          window.location.href = '/';
         } else {
-          router.replace(decodedRedirect);
+          // Use window.location.href for full page reload to ensure middleware checks cookies
+          window.location.href = decodedRedirect;
         }
       } else {
         // No redirect param - use role-based default routing
         if (userData?.role === 'DSA') {
-          router.replace('/dsa');
+          window.location.href = '/dsa';
         } else if (userData?.role === 'EMPLOYEE') {
-          router.replace('/employee');
+          window.location.href = '/employee';
         } else {
-          router.replace('/');
+          window.location.href = '/';
         }
       }
     } catch (error: any) {
