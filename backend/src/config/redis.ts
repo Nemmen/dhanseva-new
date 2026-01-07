@@ -1,10 +1,12 @@
-import { createClient, RedisClientType } from 'redis';
+import { createClient } from 'redis';
 import { config } from './index';
 
-let redisClient: RedisClientType | null = null;
+type RedisClient = ReturnType<typeof createClient>;
+
+let redisClient: RedisClient | null = null;
 let connectionPromise: Promise<void> | null = null;
 
-const createRedisClient = () => {
+const createRedisClient = (): RedisClient => {
   const client = createClient({
     username: config.redis.username,
     password: config.redis.password,
@@ -37,8 +39,10 @@ export const connectRedis = async () => {
       if (!redisClient) {
         redisClient = createRedisClient();
       }
-      await redisClient.connect();
-      console.log('✅ Redis connection established');
+      if (redisClient) {
+        await redisClient.connect();
+        console.log('✅ Redis connection established');
+      }
     } catch (error) {
       console.error('❌ Redis connection failed:', error);
       redisClient = null;
@@ -50,7 +54,7 @@ export const connectRedis = async () => {
   return connectionPromise;
 };
 
-export const getRedisClient = async (): Promise<RedisClientType> => {
+export const getRedisClient = async (): Promise<RedisClient> => {
   await connectRedis();
   if (!redisClient) {
     throw new Error('Redis client not initialized');
