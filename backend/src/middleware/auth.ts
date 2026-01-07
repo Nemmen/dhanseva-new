@@ -18,8 +18,8 @@ export const authenticate = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    // Check for token in cookies (dhanseva.sid) or Authorization header
-    const token = req.cookies['dhanseva.sid'] || req.headers.authorization?.replace('Bearer ', '');
+    // Check for token in cookies (dhanseva_token) or Authorization header
+    const token = req.cookies['dhanseva_token'] || req.headers.authorization?.replace('Bearer ', '');
 
     if (!token) {
       res.status(401).json({

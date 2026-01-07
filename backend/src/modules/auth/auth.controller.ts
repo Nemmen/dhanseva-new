@@ -34,18 +34,20 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
   const { user, token } = await authService.login(email, password);
 
-  res.cookie('dhanseva.sid', token, {
+  res.cookie('dhanseva_token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    path: '/',
   });
 
   return sendSuccess(res, user, 'Login successful', 200);
 });
 
 export const logout = asyncHandler(async (_req: Request, res: Response) => {
-  res.clearCookie('dhanseva.sid');
+  res.clearCookie('dhanseva_token', { path: '/' });
+  res.clearCookie('dhanseva.sid', { path: '/' });
   return sendSuccess(res, null, 'Logout successful', 200);
 });
 

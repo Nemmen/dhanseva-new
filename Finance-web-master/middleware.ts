@@ -51,10 +51,10 @@ export function middleware(request: NextRequest) {
   });
 
   if (protectedRoute) {
-    // Check for session cookie - using the same cookie name as backend
-    const sessionCookie = request.cookies.get('dhanseva.sid');
+    // Check for JWT token cookie
+    const tokenCookie = request.cookies.get('dhanseva_token');
     
-    if (!sessionCookie) {
+    if (!tokenCookie) {
       // Redirect to login with return URL
       const url = new URL('/login', request.url);
       url.searchParams.set('redirect', pathname);

@@ -27,8 +27,24 @@ app.use(helmet());
 app.use(securityHeaders);
 app.use(
   cors({
-    origin: config.corsOrigin,
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        config.corsOrigin,
+        'http://localhost:3000',
+        'http://localhost:3001',
+      ];
+      
+      // Allow requests with no origin (mobile apps, Postman, etc.)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
+    exposedHeaders: ['set-cookie'],
   })
 );
 
