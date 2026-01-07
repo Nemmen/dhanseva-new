@@ -28,13 +28,15 @@ app.use(securityHeaders);
 app.use(
   cors({
     origin: (origin, callback) => {
+      // Production and development allowed origins
       const allowedOrigins = [
-        config.corsOrigin,
+        'https://dhansevaindia.com',
+        'https://www.dhansevaindia.com',
         'http://localhost:3000',
         'http://localhost:3001',
       ];
       
-      // Allow requests with no origin (mobile apps, Postman, etc.)
+      // Allow requests with no origin (mobile apps, Postman, server-to-server)
       if (!origin) return callback(null, true);
       
       if (allowedOrigins.includes(origin)) {
@@ -43,7 +45,7 @@ app.use(
         callback(new Error('Not allowed by CORS'));
       }
     },
-    credentials: true,
+    credentials: true, // Required for cookies
     exposedHeaders: ['set-cookie'],
   })
 );
@@ -79,6 +81,8 @@ app.use(
       secure: config.nodeEnv === 'production',
       sameSite: config.nodeEnv === 'production' ? 'none' : 'lax',
       maxAge: config.session.maxAge,
+      // Set domain for cross-subdomain cookie sharing in production
+      ...(config.nodeEnv === 'production' && { domain: '.dhansevaindia.com' }),
     },
   })
 );

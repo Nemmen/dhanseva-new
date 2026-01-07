@@ -34,24 +34,35 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
   const { user, token } = await authService.login(email, password);
 
-  // Set cookie with proper configuration for production
+  // Cookie configuration for cross-origin setup (dhansevaindia.com <-> api.dhansevaindia.com)
   const cookieOptions: any = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: true, // Always true for production HTTPS
+    sameSite: 'none', // Required for cross-site cookies
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     path: '/',
   };
 
-  // In production, don't set domain to allow subdomain access
+  // Set domain for cross-subdomain cookie sharing in production
+  if (process.env.NODE_ENV === 'production') {
+    cookieOptions.domain = '.dhansevaindia.com';
+  }
+
   res.cookie('dhanseva_token', token, cookieOptions);
 
   return sendSuccess(res, user, 'Login successful', 200);
 });
 
 export const logout = asyncHandler(async (_req: Request, res: Response) => {
-  res.clearCookie('dhanseva_token', { path: '/' });
-  res.clearCookie('dhanseva.sid', { path: '/' });
+  // Clear cookies with same configuration used when setting them
+  const clearOptions: any = { path: '/' };
+  
+  if (process.env.NODE_ENV === 'production') {
+    clearOptions.domain = '.dhansevaindia.com';
+  }
+  
+  res.clearCookie('dhanseva_token', clearOptions);
+  res.clearCookie('dhanseva.sid', clearOptions);
   return sendSuccess(res, null, 'Logout successful', 200);
 });
 
