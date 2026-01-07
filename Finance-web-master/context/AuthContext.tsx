@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  initialCheckDone: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, role: 'USER' | 'DSA' | 'EMPLOYEE') => Promise<void>;
   logout: () => Promise<void>;
@@ -20,6 +21,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [initialCheckDone, setInitialCheckDone] = useState(false);
   const router = useRouter();
 
   // Check authentication on mount
@@ -33,8 +35,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (typeof window !== 'undefined') {
         const storedUser = sessionStorage.getItem('dhanseva_user');
         if (storedUser) {
-          setUser(JSON.parse(storedUser));
-          setLoading(false);
+          try {
+            const parsed = JSON.parse(storedUser);
+            setUser(parsed);
+          } catch (e) {
+            sessionStorage.removeItem('dhanseva_user');
+          }
         }
       }
       
@@ -53,6 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } finally {
       setLoading(false);
+      setInitialCheckDone(true);
     }
   };
 
@@ -108,6 +115,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = {
     user,
     loading,
+    initialCheckDone,
     login,
     register,
     logout,

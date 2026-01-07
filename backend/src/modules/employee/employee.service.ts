@@ -466,6 +466,58 @@ export class EmployeeService {
     }));
   }
 
+  async bulkCreateEmployees(employees: Array<{ email: string; fullName: string; password: string }>) {
+    const bcrypt = require('bcryptjs');
+    const results = {
+      created: [] as string[],
+      failed: [] as { email: string; reason: string }[],
+    };
+
+    for (const emp of employees) {
+      try {
+        // Check if user already exists
+        const existingUser = await prisma.user.findUnique({
+          where: { email: emp.email },
+        });
+
+        if (existingUser) {
+          results.failed.push({ email: emp.email, reason: 'User already exists' });
+          continue;
+        }
+
+        // Hash password
+        const passwordHash = await bcrypt.hash(emp.password, 10);
+
+        // Create user and employee profile
+        await prisma.user.create({
+          data: {
+            email: emp.email,
+            passwordHash,
+            role: 'EMPLOYEE',
+            emailVerified: true,
+            employeeProfile: {
+              create: {
+                fullName: emp.fullName,
+              },
+            },
+          },
+        });
+
+        results.created.push(emp.email);
+        console.log(`✅ Employee created: ${emp.email}`);
+      } catch (error: any) {
+        console.error(`❌ Failed to create employee ${emp.email}:`, error.message);
+        results.failed.push({ email: emp.email, reason: error.message || 'Unknown error' });
+      }
+    }
+
+    return {
+      success: results.created.length,
+      failed: results.failed.length,
+      results,
+    };
+  }
+
   private countDocuments(formData: any): number {
     if (!formData?.base) return 0;
     return Object.keys(formData.base).filter(k => k.includes('Url') && formData.base[k]).length;

@@ -107,3 +107,25 @@ export const getActiveDsas = asyncHandler(async (_req: Request, res: Response) =
   const dsas = await employeeService.getActiveDsas();
   return sendSuccess(res, dsas, 'Active DSAs retrieved', 200);
 });
+
+export const bulkCreateEmployees = asyncHandler(async (req: Request, res: Response) => {
+  const employees = req.body;
+
+  if (!Array.isArray(employees) || employees.length === 0) {
+    throw new AppError('Request body must be a non-empty array of employees', 400);
+  }
+
+  // Validate each employee object has required fields
+  const requiredFields = ['email', 'fullName', 'password'];
+  for (const emp of employees) {
+    for (const field of requiredFields) {
+      if (!emp[field]) {
+        throw new AppError(`Missing required field: ${field} for employee ${emp.email || 'unknown'}`, 400);
+      }
+    }
+  }
+
+  const result = await employeeService.bulkCreateEmployees(employees);
+  
+  return sendSuccess(res, result, 'Employees created successfully', 201);
+});

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getAllRequests, getRequestById, assignDsa, inviteDsa, updateRequestByEmployee, getAllDsas, getActiveDsas } from './employee.controller';
+import { getAllRequests, getRequestById, assignDsa, inviteDsa, updateRequestByEmployee, getAllDsas, getActiveDsas, bulkCreateEmployees } from './employee.controller';
 import { authenticate, authorize } from '../../middleware/auth';
 import { generalLimiter } from '../../middleware/rateLimiter';
 
@@ -19,5 +19,8 @@ router.get('/dsas', generalLimiter, getAllDsas);
 router.get('/dsas/active', generalLimiter, getActiveDsas);
 router.post('/assign-dsa', generalLimiter, assignDsa);
 router.post('/invite-dsa', generalLimiter, inviteDsa);
+
+// Bulk employee creation
+router.post('/bulk-create', generalLimiter, bulkCreateEmployees);
 
 export default router;

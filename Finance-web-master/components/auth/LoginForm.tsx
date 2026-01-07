@@ -44,15 +44,33 @@ export default function LoginForm() {
       const searchParams = new URLSearchParams(window.location.search);
       const redirect = searchParams.get('redirect');
       
-      // Role-based routing
-      if (userData?.role === 'DSA') {
-        router.replace('/dsa');
-      } else if (userData?.role === 'EMPLOYEE') {
-        router.replace('/employee');
-      } else if (redirect) {
-        router.replace(redirect);
+      // If there's a redirect parameter, use it regardless of role
+      // (unless it's a role-restricted area they shouldn't access)
+      if (redirect) {
+        // Decode the redirect URL
+        const decodedRedirect = decodeURIComponent(redirect);
+        
+        // Check if user is trying to access a role-restricted area
+        const isDsaRoute = decodedRedirect.startsWith('/dsa');
+        const isEmployeeRoute = decodedRedirect.startsWith('/employee');
+        
+        // Only block if trying to access wrong role's area
+        if (isDsaRoute && userData?.role !== 'DSA') {
+          router.replace('/');
+        } else if (isEmployeeRoute && userData?.role !== 'EMPLOYEE') {
+          router.replace('/');
+        } else {
+          router.replace(decodedRedirect);
+        }
       } else {
-        router.replace('/');
+        // No redirect param - use role-based default routing
+        if (userData?.role === 'DSA') {
+          router.replace('/dsa');
+        } else if (userData?.role === 'EMPLOYEE') {
+          router.replace('/employee');
+        } else {
+          router.replace('/');
+        }
       }
     } catch (error: any) {
       const errorData = error.response?.data;
