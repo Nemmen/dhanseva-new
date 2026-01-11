@@ -11,7 +11,7 @@ const uploadthingHandler = createRouteHandler({
   router: uploadRouter,
   config: {
     uploadthingSecret: process.env.UPLOADTHING_SECRET!,
-    uploadthingId: process.env.UPLOADTHING_APP_ID!,
+    uploadthingId: process.env.UPLOADTHING_ID!,
   },
 });
 
