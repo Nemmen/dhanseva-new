@@ -14,9 +14,10 @@ const uploadthingHandler = createRouteHandler({
   router: uploadRouter,
 });
 
-// UploadThing routes - authenticate first, then handle upload
-// Note: authenticate middleware sets req.user which uploadthing middleware uses
-router.all('/uploadthing', authenticate, uploadLimiter, (req: Request, res: Response, next: NextFunction) => {
+// UploadThing routes - Apply auth middleware before handler
+// The uploadRouter's middleware will check for req.user (set by authenticate)
+// UploadThing needs the handler to manage all methods (GET/POST/OPTIONS)
+router.use('/uploadthing', authenticate, uploadLimiter, (req: Request, res: Response, next: NextFunction) => {
   return uploadthingHandler(req, res, next);
 });
 
