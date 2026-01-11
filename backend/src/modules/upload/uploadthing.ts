@@ -1,5 +1,6 @@
 import { createUploadthing, type FileRouter } from 'uploadthing/express';
 
+// UploadThing automatically uses UPLOADTHING_SECRET from environment variables
 const f = createUploadthing();
 
 // UploadThing file router configuration
