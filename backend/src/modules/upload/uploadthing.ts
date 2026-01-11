@@ -1,7 +1,59 @@
 import { createUploadthing, type FileRouter } from 'uploadthing/express';
+import jwt from 'jsonwebtoken';
+import { config } from '../../config';
+import { prisma } from '../../config/database';
 
 // UploadThing automatically uses UPLOADTHING_SECRET from environment variables
 const f = createUploadthing();
+
+// Helper function to verify JWT and get user from Authorization header
+const verifyAuthToken = async (req: any) => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader) {
+    throw new Error('Unauthorized - No authorization header');
+  }
+
+  const token = authHeader.replace('Bearer ', '');
+  
+  if (!token) {
+    throw new Error('Unauthorized - No token provided');
+  }
+
+  try {
+    // Verify JWT using the same secret as Express authenticate
+    const decoded = jwt.verify(token, config.jwt.secret) as {
+      id: string;
+      email: string;
+      role: string;
+    };
+
+    // Verify user still exists in database
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id },
+      select: { id: true, email: true, role: true, emailVerified: true },
+    });
+
+    if (!user) {
+      throw new Error('Unauthorized - User not found');
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      emailVerified: user.emailVerified,
+    };
+  } catch (error) {
+    if (error instanceof jwt.JsonWebTokenError) {
+      throw new Error('Unauthorized - Invalid token');
+    }
+    if (error instanceof jwt.TokenExpiredError) {
+      throw new Error('Unauthorized - Token expired');
+    }
+    throw error;
+  }
+};
 
 // UploadThing file router configuration
 export const uploadRouter = {
@@ -11,12 +63,8 @@ export const uploadRouter = {
     pdf: { maxFileSize: '4MB', maxFileCount: 1 },
   })
     .middleware(async ({ req }) => {
-      // Get user from request (set by auth middleware)
-      const user = (req as any).user;
-      
-      if (!user) {
-        throw new Error('Unauthorized - Please login to upload files');
-      }
+      // Verify JWT directly from Authorization header
+      const user = await verifyAuthToken(req);
 
       // Return metadata to be stored with the file
       return { 
@@ -44,11 +92,8 @@ export const uploadRouter = {
     pdf: { maxFileSize: '4MB', maxFileCount: 10 },
   })
     .middleware(async ({ req }) => {
-      const user = (req as any).user;
-      
-      if (!user) {
-        throw new Error('Unauthorized - Please login to upload files');
-      }
+      // Verify JWT directly from Authorization header
+      const user = await verifyAuthToken(req);
 
       return { 
         userId: user.id,
@@ -70,11 +115,8 @@ export const uploadRouter = {
     pdf: { maxFileSize: '4MB', maxFileCount: 1 },
   })
     .middleware(async ({ req }) => {
-      const user = (req as any).user;
-      
-      if (!user) {
-        throw new Error('Unauthorized');
-      }
+      // Verify JWT directly from Authorization header
+      const user = await verifyAuthToken(req);
 
       // Only DSA and EMPLOYEE can replace files
       if (!['DSA', 'EMPLOYEE'].includes(user.role)) {
