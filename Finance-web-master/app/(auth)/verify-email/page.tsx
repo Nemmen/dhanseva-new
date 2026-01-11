@@ -18,7 +18,24 @@ function VerifyEmailContent() {
   const [isResending, setIsResending] = useState(false);
   const [canResend, setCanResend] = useState(false);
   const [timer, setTimer] = useState(60);
+  const [otpSent, setOtpSent] = useState(false);
 
+  // Send OTP automatically on component mount
+  useEffect(() => {
+    const sendInitialOTP = async () => {
+      if (email && !otpSent) {
+        try {
+          await otpService.sendOtp(email);
+          setOtpSent(true);
+          toast.success('OTP sent to your email!');
+        } catch (error: any) {
+          toast.error(error.response?.data?.message || 'Failed to send OTP.');
+        }
+      }
+    };
+    
+    sendInitialOTP();
+  }, [email, otpSent]);
   // Timer for resend button
   useEffect(() => {
     if (timer > 0) {
