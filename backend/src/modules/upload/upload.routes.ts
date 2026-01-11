@@ -10,6 +10,7 @@ const router = Router();
 const utapi = new UTApi();
 
 // Create the UploadThing route handler
+// Note: UPLOADTHING_SECRET env var is automatically picked up by the handler
 const uploadthingHandler = createRouteHandler({
   router: uploadRouter,
 });
