@@ -6,13 +6,16 @@ import { UTApi } from 'uploadthing/server';
 import { asyncHandler } from '../../middleware/errorHandler';
 
 const router = Router();
-const utapi = new UTApi({
-  apiKey: process.env.UPLOADTHING_SECRET,
-});
+const utapi = new UTApi();
+
 
 // Create the UploadThing route handler
 const uploadthingHandler = createRouteHandler({
   router: uploadRouter,
+  config: {
+    uploadthingSecret: process.env.UPLOADTHING_SECRET!,
+    uploadthingId: process.env.UPLOADTHING_APP_ID!,
+  },
 });
 
 // UploadThing routes - Handle auth inside the route to set req.user for UploadThing
