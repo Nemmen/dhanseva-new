@@ -2,24 +2,30 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { createRouteHandler } from 'uploadthing/express';
 import { uploadRouter } from './uploadthing';
 import { authenticate } from '../../middleware/auth';
-import { uploadLimiter } from '../../middleware/rateLimiter';
 import { UTApi } from 'uploadthing/server';
 import { asyncHandler } from '../../middleware/errorHandler';
 
 const router = Router();
-const utapi = new UTApi();
+const utapi = new UTApi({
+  apiKey: process.env.UPLOADTHING_SECRET,
+});
 
 // Create the UploadThing route handler
-// Note: UPLOADTHING_SECRET env var is automatically picked up by the handler
 const uploadthingHandler = createRouteHandler({
   router: uploadRouter,
 });
 
-// UploadThing routes - Apply auth middleware before handler
-// The uploadRouter's middleware will check for req.user (set by authenticate)
-// UploadThing needs the handler to manage all methods (GET/POST/OPTIONS)
-router.use('/uploadthing', authenticate, uploadLimiter, (req: Request, res: Response, next: NextFunction) => {
-  return uploadthingHandler(req, res, next);
+// UploadThing routes - Handle auth inside the route to set req.user for UploadThing
+// Authentication is checked inside uploadRouter's .middleware() functions
+// This allows UploadThing to properly handle OPTIONS, GET, and POST requests
+router.use('/uploadthing', (req: Request, res: Response, next: NextFunction) => {
+  // Apply authentication to set req.user, but don't block the request
+  // Let UploadThing's own middleware decide if the request should proceed
+  authenticate(req, res, () => {
+    // Even if auth fails, continue to UploadThing handler
+    // The uploadRouter middleware will handle unauthorized cases
+    uploadthingHandler(req, res, next);
+  });
 });
 
 // Delete file endpoint
