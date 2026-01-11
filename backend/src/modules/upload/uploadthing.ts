@@ -6,27 +6,27 @@ import { prisma } from '../../config/database';
 // UploadThing automatically uses UPLOADTHING_SECRET from environment variables
 const f = createUploadthing();
 
-// Helper function to verify JWT and get user from Authorization header
+// Helper function to verify JWT and get user from Authorization header or cookies
 const verifyAuthToken = async (req: any) => {
-  const authHeader = req.headers.authorization;
-  
-  if (!authHeader) {
-    throw new Error('Unauthorized - No authorization header');
-  }
-
-  const token = authHeader.replace('Bearer ', '');
-  
-  if (!token) {
-    throw new Error('Unauthorized - No token provided');
-  }
-
   try {
+    // Check for token in cookies (dhanseva_token) or Authorization header (like Express authenticate does)
+    const token = req.cookies?.['dhanseva_token'] || req.headers?.authorization?.replace('Bearer ', '');
+    
+    if (!token) {
+      console.error('[UploadThing Auth] No token found in cookies or Authorization header');
+      throw new Error('Unauthorized - No token provided');
+    }
+
+    console.log('[UploadThing Auth] Token found, verifying...');
+
     // Verify JWT using the same secret as Express authenticate
     const decoded = jwt.verify(token, config.jwt.secret) as {
       id: string;
       email: string;
       role: string;
     };
+
+    console.log('[UploadThing Auth] JWT verified for user:', decoded.id);
 
     // Verify user still exists in database
     const user = await prisma.user.findUnique({
@@ -35,8 +35,11 @@ const verifyAuthToken = async (req: any) => {
     });
 
     if (!user) {
+      console.error('[UploadThing Auth] User not found in database:', decoded.id);
       throw new Error('Unauthorized - User not found');
     }
+
+    console.log('[UploadThing Auth] User authenticated:', user.id, user.role);
 
     return {
       id: user.id,
@@ -45,6 +48,8 @@ const verifyAuthToken = async (req: any) => {
       emailVerified: user.emailVerified,
     };
   } catch (error) {
+    console.error('[UploadThing Auth] Authentication error:', error);
+    
     if (error instanceof jwt.JsonWebTokenError) {
       throw new Error('Unauthorized - Invalid token');
     }
