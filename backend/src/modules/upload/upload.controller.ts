@@ -4,7 +4,9 @@ import { sendSuccess } from '../../utils/response';
 import { AppError } from '../../middleware/errorHandler';
 import { UTApi } from 'uploadthing/server';
 
-const utapi = new UTApi();
+const utapi = new UTApi({
+  apiKey: process.env.UPLOADTHING_SECRET,
+});
 
 /**
  * Delete a file from UploadThing
@@ -60,6 +62,10 @@ export const getFileInfo = asyncHandler(async (req: Request, res: Response) => {
  * Service class for file operations
  */
 export class UploadService {
+  private static utapi = new UTApi({
+    apiKey: process.env.UPLOADTHING_SECRET,
+  });
+
   /**
    * Delete multiple files
    */
@@ -67,7 +73,7 @@ export class UploadService {
     if (fileKeys.length === 0) return;
     
     try {
-      await utapi.deleteFiles(fileKeys);
+      await this.utapi.deleteFiles(fileKeys);
     } catch (error) {
       console.error('Error deleting files:', error);
     }
@@ -80,7 +86,7 @@ export class UploadService {
     if (fileKeys.length === 0) return [];
     
     try {
-      const result = await utapi.getFileUrls(fileKeys);
+      const result = await this.utapi.getFileUrls(fileKeys);
       // Convert readonly array to mutable
       return [...result.data];
     } catch (error) {
